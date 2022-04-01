@@ -15,9 +15,10 @@ jobs:
           $Owner, $Repo = "${{ github.repository }}" -split "/"
           echo "Repo Owner: $Owner"
           echo "Repo Name:  $Repo"
-          echo "For PR: ${{ github.event.number}}"
+          [int]$PR = ${{ github.event.number }}
+          echo "For PR: $PR"
           $Query = @'
-          query($owner: String!, $repo: String!) {
+          query($owner: String!, $repo: String!, $pr: Int!) {
             repository(owner: $owner, name: $repo) {
               pullRequest(number: 8695) {
                 author {
@@ -31,7 +32,7 @@ jobs:
           echo "Query: $Query"
           $JQ = '.data.repository.pullRequest | {author, authorAssociation}'
           echo "JQ: $JQ"
-          $ApiResults = gh api graphql -F owner=$Owner -F repo=$Repo -f query=$Query --jq $JQ
+          $ApiResults = gh api graphql -F owner=$Owner -F repo=$Repo -F pr=$PR -f query=$Query --jq $JQ
           echo "API Results:`n$($ApiResults)"
           # $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
           # echo "$Permission"
