@@ -16,8 +16,7 @@ jobs:
           echo "Repo Owner: $Owner"
           echo "Repo Name:  $Repo
           echo "For PR: ${{ github.event.number}}"
-          $Query = @'
-          query($owner: String!, $repo: String!) {
+          $Query = 'query($owner: String!, $repo: String!) {
             repository(owner: $owner, name: $repo) {
               pullRequest(number: 8695) {
                 author {
@@ -26,8 +25,7 @@ jobs:
                 authorAssociation
               }
             }
-          }
-          '@
+          }'
           $JQ = '.data.repository.pullRequest | {author, authorAssociation}'
           echo "Query: $Query"
           echo "JQ: $JQ"
@@ -36,16 +34,16 @@ jobs:
           # echo "$Permission"
           # echo "$($Permission | ConvertFrom-Json -ErrorAction Stop)"
           # echo "$($Permission | ConvertFrom-Json | Select -Expand viewerPermission)"
-      - name: Authorized to Target Live Branch?
-        if: ${{ github.base_ref == 'live' }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
-          | ConvertFrom-Json
-          | Select-Object -ExpandProperty viewerPermission
-          if ($Permission -notin @('WRITE', 'ADMIN')) {
-            throw "User ${{ github.actor }} does not have permissions to target live branch."
-          } else {
-            echo "User has permissions to target live branch."
-          }
+      # - name: Authorized to Target Live Branch?
+      #   if: ${{ github.base_ref == 'live' }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   run: |
+      #     $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
+      #     | ConvertFrom-Json
+      #     | Select-Object -ExpandProperty viewerPermission
+      #     if ($Permission -notin @('WRITE', 'ADMIN')) {
+      #       throw "User ${{ github.actor }} does not have permissions to target live branch."
+      #     } else {
+      #       echo "User has permissions to target live branch."
+      #     }
