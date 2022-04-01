@@ -20,7 +20,7 @@ jobs:
           $Query = @'
           query($owner: String!, $repo: String!, $pr: Int!) {
             repository(owner: $owner, name: $repo) {
-              pullRequest(number: 8695) {
+              pullRequest(number: $pr) {
                 author {
                   login
                 }
