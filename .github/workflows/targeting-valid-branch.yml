@@ -8,7 +8,7 @@ jobs:
         shell: pwsh
     steps:
       - name: Authorized to Target Live Branch?
-        if: ${{ github.base_ref == "refs/heads/live"}}
+        if: ${{ github.base_ref == 'refs/heads/live' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
