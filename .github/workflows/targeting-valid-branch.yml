@@ -11,33 +11,56 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          echo "Targeting: ${{ github.base_ref }}"
-          $Owner, $Repo = "${{ github.repository }}" -split "/"
-          echo "Repo Owner: $Owner"
-          echo "Repo Name:  $Repo"
-          [int]$PR = ${{ github.event.number }}
-          echo "For PR: $PR"
+          # echo "Targeting: ${{ github.base_ref }}"
+          # $Owner, $Repo = "${{ github.repository }}" -split "/"
+          # echo "Repo Owner: $Owner"
+          # echo "Repo Name:  $Repo"
+          # $Query = @'
+          # query($owner: String!, $repo: String!, $pr: Int!) {
+          #   repository(owner: $owner, name: $repo) {
+          #     pullRequest(number: $pr) {
+          #       author {
+          #         login
+          #       }
+          #       authorAssociation
+          #     }
+          #   }
+          # }
+          # '@
           $Query = @'
-          query($owner: String!, $repo: String!, $pr: Int!) {
+          query author_collaborator_permission($owner: String!, $repo: String!, $actor: String!) {
             repository(owner: $owner, name: $repo) {
-              pullRequest(number: $pr) {
-                author {
-                  login
+              collaborators(query: $actor) {
+                edges {
+                  permission
                 }
-                authorAssociation
               }
             }
           }
           '@
-          echo "Query: $Query"
-          $JQ = '.data.repository.pullRequest | {author, authorAssociation}'
-          echo "JQ: $JQ"
-          $ApiResults = gh api graphql -F owner=$Owner -F repo=$Repo -F pr=$PR -f query=$Query --jq $JQ
-          echo "API Results:`n$($ApiResults)"
-          # $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
-          # echo "$Permission"
-          # echo "$($Permission | ConvertFrom-Json -ErrorAction Stop)"
-          # echo "$($Permission | ConvertFrom-Json | Select -Expand viewerPermission)"
+          $ApiParameters = @(
+            'api', 'graphql'
+            '-F', "owner=${{ github.event.pull_request.base.repo.owner.login}}"
+            '-F', "repo=${{ github.event.pull_request.base.repo.name }}"
+            '-F', "actor=${{ github.event.pull_request.user.login }}"
+            '-f', "query=$Query"
+            '--jq', '.data.repository.collaborators.edges[].permission'
+          )
+          [string[]]$Permissions = gh @ApiParameters
+          echo "Author '${{ github.event.pull_request.user.login }}' has permissions: '$($Permissions -join ',')'"
+          # $ApiResults = gh api graphql -F pr=$PR -f query=$Query --jq $JQ
+          # echo "API Results:`n$($ApiResults)"
+          # $Info = $ApiResults
+          # | ConvertFrom-Json
+          # | Select-Object -Property @{
+          #   Name = 'Author'
+          #   Expression = { $_.author.login }
+          # }, @{
+          #   Name = 'Permissions'
+          #   Expression = { $_.authorAssociation }
+          # }
+          # echo "$($Info | Format-List)"
+          # $PermittedToTarget = 
       # - name: Authorized to Target Live Branch?
       #   if: ${{ github.base_ref == 'live' }}
       #   env:
