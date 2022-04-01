@@ -10,6 +10,11 @@ jobs:
       - name: List target branch name
         run: |
           echo "${{ github.base_ref }}"
+          echo "${{ github.repository }}"
+          $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
+          echo "$Permission"
+          echo "$($Permission | ConvertFrom-Json -ErrorAction Stop)"
+          echo "$($Permission | ConvertFrom-Json | Select -Expand viewerPermission)"
       - name: Authorized to Target Live Branch?
         if: ${{ github.base_ref == 'live' }}
         env:
