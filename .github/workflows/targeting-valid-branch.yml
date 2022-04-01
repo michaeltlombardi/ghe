@@ -31,7 +31,8 @@ jobs:
           echo "Query: $Query"
           $JQ = '.data.repository.pullRequest | {author, authorAssociation}'
           echo "JQ: $JQ"
-          # gh api graphql -F owner=$Owner -F repo=$Repo -f query=$Query --jq $JQ
+          $ApiResults = gh api graphql -F owner=$Owner -F repo=$Repo -f query=$Query --jq $JQ
+          echo "API Results:`n$($ApiResults)"
           # $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
           # echo "$Permission"
           # echo "$($Permission | ConvertFrom-Json -ErrorAction Stop)"
