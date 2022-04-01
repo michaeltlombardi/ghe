@@ -1,0 +1,20 @@
+name: Targeting Valid Branch
+on: [pull_request_target]
+jobs:
+  Test:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Authorized to Target Live Branch?
+        if: ${{ github.base_ref == "refs/heads/live"}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $Permission = gh repo view --json 'viewerPermission'
+          | ConvertFrom-Json
+          | Select-Object -ExpandProperty viewerPermission
+          if ($Permission -notin @('WRITE', 'ADMIN')) {
+            throw "User ${{ github.actor }} does not have permissions to target live branch."
+          }
