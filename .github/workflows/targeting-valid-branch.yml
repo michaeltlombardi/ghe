@@ -7,6 +7,9 @@ jobs:
       run:
         shell: pwsh
     steps:
+      - name: List target branch name
+        run: |
+          echo "${{ github.base_ref }}"
       - name: Authorized to Target Live Branch?
         if: ${{ github.base_ref == 'refs/heads/live' }}
         env:
@@ -17,4 +20,6 @@ jobs:
           | Select-Object -ExpandProperty viewerPermission
           if ($Permission -notin @('WRITE', 'ADMIN')) {
             throw "User ${{ github.actor }} does not have permissions to target live branch."
+          } else {
+            echo "User has permissions to target live branch."
           }
