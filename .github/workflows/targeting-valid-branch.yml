@@ -16,18 +16,20 @@ jobs:
           echo "Repo Owner: $Owner"
           echo "Repo Name:  $Repo
           echo "For PR: ${{ github.event.number}}"
-          $Query = 'query($owner: String!, $repo: String!) {
-            repository(owner: $owner, name: $repo) {
-              pullRequest(number: 8695) {
-                author {
-                  login
-                }
-                authorAssociation
-              }
-            }
-          }'
-          $JQ = '.data.repository.pullRequest | {author, authorAssociation}'
+          $StringBuilder = [System.Text.StringBuilder]::new()
+          [void]$StringBuilder.Append('query($owner: String!, $repo: String!) {')
+          [void]$StringBuilder.AppendLine('  repository(owner: $owner, name: $repo) {')
+          [void]$StringBuilder.AppendLine('    pullRequest(number: 8695) {')
+          [void]$StringBuilder.AppendLine('      author {')
+          [void]$StringBuilder.AppendLine('        login')
+          [void]$StringBuilder.AppendLine('      }')
+          [void]$StringBuilder.AppendLine('      authorAssociation')
+          [void]$StringBuilder.AppendLine('    }')
+          [void]$StringBuilder.AppendLine('  }')
+          [void]$StringBuilder.AppendLine('}')
+          $Query = $StringBuilder.ToString()
           echo "Query: $Query"
+          $JQ = '.data.repository.pullRequest | {author, authorAssociation}'
           echo "JQ: $JQ"
           # gh api graphql -F owner=$Owner -F repo=$Repo -f query=$Query --jq $JQ
           # $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
