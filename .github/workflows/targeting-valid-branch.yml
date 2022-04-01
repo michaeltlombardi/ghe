@@ -7,18 +7,37 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - name: List target branch name
+      - name: List info
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          echo "${{ github.base_ref }}"
-          echo "${{ github.repository }}"
-          $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
-          echo "$Permission"
-          echo "$($Permission | ConvertFrom-Json -ErrorAction Stop)"
-          echo "$($Permission | ConvertFrom-Json | Select -Expand viewerPermission)"
+          echo "Targeting: ${{ github.base_ref }}"
+          $Owner, $Repo = "${{ github.repository }}" -split "/"
+          echo "Repo Owner: $Owner"
+          echo "Repo Name:  $Repo
+          echo "For PR: ${{ github.event.number}}"
+          $Query = @'
+          query($owner: String!, $repo: String!) {
+            repository(owner: $owner, name: $repo) {
+              pullRequest(number: 8695) {
+                author {
+                  login
+                }
+                authorAssociation
+              }
+            }
+          }
+          '@
+          $JQ = '.data.repository.pullRequest | {author, authorAssociation}'
+          gh api graphql -F owner=$Owner -F repo=$Repo -f query=$Query --jq $JQ
+          # $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
+          # echo "$Permission"
+          # echo "$($Permission | ConvertFrom-Json -ErrorAction Stop)"
+          # echo "$($Permission | ConvertFrom-Json | Select -Expand viewerPermission)"
       - name: Authorized to Target Live Branch?
         if: ${{ github.base_ref == 'live' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
           | ConvertFrom-Json
