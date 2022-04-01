@@ -6,27 +6,12 @@ jobs:
     defaults:
       run:
         shell: pwsh
+    if: github.base_ref == 'live'
     steps:
-      - name: List info
+      - name: Authorized to Target Live Branch?
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          # echo "Targeting: ${{ github.base_ref }}"
-          # $Owner, $Repo = "${{ github.repository }}" -split "/"
-          # echo "Repo Owner: $Owner"
-          # echo "Repo Name:  $Repo"
-          # $Query = @'
-          # query($owner: String!, $repo: String!, $pr: Int!) {
-          #   repository(owner: $owner, name: $repo) {
-          #     pullRequest(number: $pr) {
-          #       author {
-          #         login
-          #       }
-          #       authorAssociation
-          #     }
-          #   }
-          # }
-          # '@
           $Query = @'
           query author_collaborator_permission($owner: String!, $repo: String!, $actor: String!) {
             repository(owner: $owner, name: $repo) {
@@ -48,29 +33,8 @@ jobs:
           )
           [string[]]$Permissions = gh @ApiParameters
           echo "Author '${{ github.event.pull_request.user.login }}' has permissions: '$($Permissions -join ',')'"
-          # $ApiResults = gh api graphql -F pr=$PR -f query=$Query --jq $JQ
-          # echo "API Results:`n$($ApiResults)"
-          # $Info = $ApiResults
-          # | ConvertFrom-Json
-          # | Select-Object -Property @{
-          #   Name = 'Author'
-          #   Expression = { $_.author.login }
-          # }, @{
-          #   Name = 'Permissions'
-          #   Expression = { $_.authorAssociation }
-          # }
-          # echo "$($Info | Format-List)"
-          # $PermittedToTarget = 
-      # - name: Authorized to Target Live Branch?
-      #   if: ${{ github.base_ref == 'live' }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ github.token }}
-      #   run: |
-      #     $Permission = gh repo view ${{ github.repository }} --json 'viewerPermission'
-      #     | ConvertFrom-Json
-      #     | Select-Object -ExpandProperty viewerPermission
-      #     if ($Permission -notin @('WRITE', 'ADMIN')) {
-      #       throw "User ${{ github.actor }} does not have permissions to target live branch."
-      #     } else {
-      #       echo "User has permissions to target live branch."
-      #     }
+          if ($Permissions -notcontains 'MAINTAIN' -and $Permissions -notcontains 'ADMIN') {
+            throw "Author does not have permissions to target ${{ github.base_ref }}"
+          } else {
+            echo "Author has permissions to target ${{ github.base_ref }}"
+          }
