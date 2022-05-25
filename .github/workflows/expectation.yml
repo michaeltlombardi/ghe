@@ -4,12 +4,17 @@
 name: Sharing Expectations
 on:
   pull_request:
-    types:
-      - opened
+    # types:
+    #   - opened
     branches:
       - main
 jobs:
   ShareExpectations:
+    if: |
+      github.event.pull_request.author_association != 'CONTRIBUTOR' &&
+      github.event.pull_request.author_association != 'FIRST_TIMER' &&
+      github.event.pull_request.author_association != 'FIRST_TIME_CONTRIBUTOR' &&
+      github.event.pull_request.author_association != 'NONE'
     runs-on: windows-latest
     defaults:
       run:
@@ -22,20 +27,19 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v3
         # Builds the list of author associations the message should post for
-      - name: List Author Associations to Comment On
-        id: get_associations
-        run: |
-          $Associations = @(
-            'CONTRIBUTOR'
-            'FIRST_TIMER'
-            'FIRST_TIME_CONTRIBUTOR'
-            'NONE'
-          ) | ConvertTo-Json -Compress
-          echo "::set-output name=value::$Associations"
-        # Comments on the PR
+      # - name: List Author Associations to Comment On
+      #   id: get_associations
+      #   run: |
+      #     $Associations = @(
+      #       'CONTRIBUTOR'
+      #       'FIRST_TIMER'
+      #       'FIRST_TIME_CONTRIBUTOR'
+      #       'NONE'
+      #     ) | ConvertTo-Json -Compress
+      #     echo "::set-output name=value::$Associations"
+      #   # Comments on the PR
       - name: Comment on Community PR
         id: comment_on_pr
-        if: contains(steps.get_associations.outputs.value, github.event.pull_request.author_association)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
