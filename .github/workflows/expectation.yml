@@ -11,10 +11,10 @@ on:
 jobs:
   ShareExpectations:
     if: |
-      github.event.pull_request.author_association != 'CONTRIBUTOR' &&
-      github.event.pull_request.author_association != 'FIRST_TIMER' &&
-      github.event.pull_request.author_association != 'FIRST_TIME_CONTRIBUTOR' &&
-      github.event.pull_request.author_association != 'NONE'
+      github.event.pull_request.author_association == 'CONTRIBUTOR' ||
+      github.event.pull_request.author_association == 'FIRST_TIMER' ||
+      github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR' ||
+      github.event.pull_request.author_association == 'NONE'
     runs-on: windows-latest
     defaults:
       run:
