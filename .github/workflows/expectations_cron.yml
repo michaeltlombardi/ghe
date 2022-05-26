@@ -1,0 +1,21 @@
+# This action comments on a PR by a community member with the expectations they
+# should have for the process. It only runs on PRs to the main branch when they
+# are opened. It uses a markdown file in the .github folder for the content.
+#
+# This iteration doesn't do anything useful but call the next workflow, which
+# will fail; just wanna see the permissions.
+name: Sharing Expectations
+on:
+  schedule:
+    - cron: 0/1 * * * *
+jobs:
+  ShareExpectations:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    # Limits this job to only run on PRs where the author is not part of the
+    # maintainer team (i.e. not a collaborator, member, or owner).
+    steps:
+      - name: Comment on Community PR
+        uses: ./.github/workflows/expectation2.yml

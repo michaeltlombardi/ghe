@@ -1,0 +1,30 @@
+# This action comments on a PR by a community member with the expectations they
+# should have for the process. It only runs on PRs to the main branch when they
+# are opened. It uses a markdown file in the .github folder for the content.
+#
+# This job is scheduled to run every five minutes, look for open pull requests,
+# and then act on them if needed.
+name: Comment Expectations
+on: workflow_dispatch
+jobs:
+  CommentExpectations:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+        # The repo needs to be checked out to have access to the message file.
+      - name: Checkout
+        id: checkout_repo
+        uses: actions/checkout@v3
+        # Comments on the PR
+      - name: Comment on Community PR
+        id: comment_on_pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $Number = ${{ github.event.pull_request.number }}
+          $Repo = '${{ github.repository_owner }}/${{ github.event.repository.name }}'
+          $BodyFile = Get-Item -Path ./.github/messages/Expectations.md |
+            Select-Object -ExpandProperty FullName
+          gh pr comment $Number --repo $Repo --body-file "$BodyFile"
