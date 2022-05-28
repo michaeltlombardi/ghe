@@ -1,4 +1,11 @@
-## Expectations
+<!-- GHA.Comment.Id.Community.Expectations -->
+
+# Expectations
+
+Thanks for your submission! Here's a quick note to provide you with some context for what to expect
+from the docs team and the process now that you've submitted a PR. Even if you've contributed to
+this repo before, we strongly suggest reading this information; it might have changed since you last
+read it.
 
 To see our process for reviewing PRs, please read our [editor's checklist][contrib-checklist] and
 process for [managing pull requests][contrib-managing-prs] in particular. Below is a brief,
@@ -21,7 +28,7 @@ content ready for merge.
 While reviewing your PR, the docs team may make suggestions, write comments, and ask questions. When
 all requirements are satisfied, the docs team marks your PR as **Approved** and merges it. Once your
 PR is merged, it is included the next time the documentation is published. For this project, the
-documentation is published daily at 3pm Pacific Standard Time (PST).
+documentation is published daily at 3 p.m. Pacific Standard Time (PST).
 
 [contrib-checklist]: https://docs.microsoft.com/powershell/scripting/community/contributing/editorial-checklist
 [contrib-managing-prs]: https://docs.microsoft.com/powershell/scripting/community/contributing/managing-pull-requests
