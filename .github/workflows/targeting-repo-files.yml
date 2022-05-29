@@ -1,14 +1,18 @@
-# This workflow verifies that an author submitting a pull request to the live
-# branch is authorized to do so; only users with maintainer or admin rights may
-# target the live branch directly.
+# This workflow verifies that an author submitting a pull request to the main
+# branch to modify repository files is authorized to do so; only users with
+# maintainer or admin rights may modify the PowerShell module/scripts or the
+# workflow definitions.
 name: Authorization
 on:
   pull_request_target:
     branches:
-      - live
+      - main
+    paths:
+      - .github/pwsh/**
+      - .github/workflows/**
 jobs:
   Test:
-    name: Check Branch Permissions
+    name: Check Repo File Permissions
     runs-on: windows-latest
     defaults:
       run:
@@ -17,7 +21,7 @@ jobs:
       - name: Checkout Repository
         id: checkout_repo
         uses: actions/checkout@v3
-      - name: Authorized to Target Live Branch?
+      - name: Authorized to Modify Repo Files?
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -25,6 +29,6 @@ jobs:
             Owner  = '${{ github.event.pull_request.base.repo.owner.login}}'
             Repo   = '${{ github.event.pull_request.base.repo.name }}'
             Author = '${{ github.event.pull_request.user.login }}'
-            TargetBranch = 'Live'
+            TargetPath = @('.github/pwsh/**', '.github/workflows/**')
           }
           . ./.github/pwsh/scripts/Test-Authorization.ps1 @Parameters
