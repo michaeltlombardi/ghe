@@ -15,7 +15,7 @@ This script ensures all open community PRs have an expectations comment. It sear
 for open pull requests without the comment (identified by an HTML comment with a special ID in it)
 and then checks each open pull request to see if the author is a maintainer or a community member.
 If the author is a maintainer, the script skips that PR. If the author is a community member, it
-writes the contents of the `Expectations.md` rendered as HTML as a comment on the PR.
+writes the contents of the message rendered as HTML from Markdown as a comment on the PR.
 
 For more information, see [the reference document][expectations-doc].
 

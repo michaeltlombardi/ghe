@@ -5,7 +5,7 @@
 name: Commenting
 on:
   schedule:
-    - cron: 0/5 * * * *
+    - cron: 0 * * * *
 permissions:
   contents: read
   pull-requests: write
@@ -23,6 +23,6 @@ jobs:
       - name: Comment on Community PRs
         uses: ./.github/actions/commenting/expectations/v1
         with:
-          message_path: .github/messages/Expectations.md
+          message_path: .github/messages/expectations.md
           token: ${{ github.token }}
 
