@@ -33,7 +33,6 @@
     `hello.md` in the comment.
 #>
 
-{0}
 function Add-PullRequestComment {
     [CmdletBinding()]
     param(

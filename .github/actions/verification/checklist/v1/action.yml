@@ -1,0 +1,68 @@
+name: Checklist
+description: |
+  Inspects the checklist items on a pull request to see if they have all been filled out.
+author: PowerShell Docs Team
+inputs:
+  body:
+    description: |
+      The body of the GitHub Pull Request to inspect for checklist completion. If using this action
+      on a `pull_request` or `pull_request_target` event, this is handled automatically. Otherwise,
+      it must be specified.
+    required: true
+    default: ${{ github.event.pull_request.body }}
+  pull_request_url:
+    description: |
+      The URL of the GitHub Pull Request to inspect for checklist completion. If using this action
+      on a `pull_request` or `pull_request_target` event, this is handled automatically. Otherwise,
+      it must be specified.
+    required: true
+    default: ${{ github.event.pull_request.url }}
+runs:
+  using: composite
+  steps:
+    - shell: pwsh
+      env:
+        INPUT_PULL_REQUEST_URL: ${{ inputs.pull_request_url }}
+        INPUT_BODY:  ${{ inputs.body }}
+      run: |
+        Write-Output "::group::Generic Setup"
+        $ActionPath = Resolve-Path '${{ github.action_path }}' | Select-Object -ExpandProperty Path
+        $ParameterHandlers = Join-Path -Path $ActionPath -ChildPath Parameters.psd1
+        | ForEach-Object -Process { Import-PowerShellDataFile -Path $_ }
+        | Select -ExpandProperty Parameters
+        | ForEach-Object -Process { [pscustomobject]$_ }
+        "Action Path: $ActionPath"
+
+        $ActionRootPath = Split-Path -Parent -Path $ActionPath
+        while ((Split-Path -Leaf -Path $ActionRootPath) -ne 'actions') {
+          $ActionRootPath = Split-Path -Parent -Path $ActionRootPath
+        }
+        "Action Root Path: $ActionRootPath"
+        
+        $JoinPathParams = @{
+          Path = $ActionRootPath
+          ChildPath = '.pwsh'
+        }
+
+        $ModulePath = Join-Path @JoinPathParams -AdditionalChildPath @(
+          'module'
+          'gha.psd1'
+        )
+        "Module Path: $ModulePath"
+        Import-Module -Name $ModulePath -PassThru | Format-List
+
+        $ScriptPath = Join-Path @JoinPathParams -AdditionalChildPath @(
+          'scripts',
+          'Test-Checklist.ps1'
+        )
+        "Script Path: $ScriptPath"
+        Write-Output "::endgroup::"
+
+        Write-Output "::group::Parameter Validation"
+        $Parameters = Get-Parameter -ParameterHandler $ParameterHandlers
+        Write-Output "::endgroup::"
+        
+        Write-Output "::group::Verify Checklist"
+        . $ScriptPath @Parameters
+        Write-Output "::endgroup::"
+

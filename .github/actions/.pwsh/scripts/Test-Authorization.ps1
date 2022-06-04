@@ -11,7 +11,7 @@
 .PARAMETER Repo
   The name of the repository to check the author's permissions in. For `https://github.com/foo/bar`
   the repo is `bar`.
-.PARAMETER Author
+.PARAMETER User
   The username to retrieve permissions for.
 .PARAMETER TargetBranch
   Specifies the name of a branch requring maintainer permissions to target.
@@ -46,11 +46,12 @@ param(
   [Parameter(Mandatory)]
   [string]$Repo,
   [Parameter(Mandatory)]
-  [string]$Author,
+  [string]$User,
   [Parameter(Mandatory, ParameterSetName='Branch')]
   [string]$TargetBranch,
   [Parameter(Mandatory, ParameterSetName='Path')]
-  [string[]]$TargetPath
+  [string[]]$TargetPath,
+  [string[]]$ValidPermissions
 )
 
 begin {
@@ -66,7 +67,7 @@ begin {
     - Need to grab the path to the body file for the PR comment.
   #>
   $GitHubFolder = Split-Path -Parent $PSScriptRoot | Split-Path -Parent
-  $ModuleFile = Resolve-Path -Path "$GitHubFolder/pwsh/gha/gha.psm1"
+  $ModuleFile = Resolve-Path -Path "$GitHubFolder/.pwsh/module/gha.psd1"
   | Select-Object -ExpandProperty Path
   Import-Module $ModuleFile -Force
   $Summary = New-Object -TypeName System.Text.StringBuilder
@@ -79,8 +80,8 @@ begin {
       Markdown = "**Success**"
     }
     Author = @{
-      Console = Format-ConsoleStyle -Text $Author -DefinedStyle UserName
-      Markdown = "``$Author``"
+      Console = Format-ConsoleStyle -Text $User -DefinedStyle UserName
+      Markdown = "``$User``"
     }
   }
   if (![string]::IsNullOrEmpty($TargetBranch)) {
@@ -105,7 +106,7 @@ begin {
 
 process {
   try {
-    $Permissions = Get-AuthorPermission -Owner $Owner -Repo $Repo -Author $Author
+    $Permissions = Get-AuthorPermission -Owner $Owner -Repo $Repo -Author $User
   } catch {
     $Record = $_ | Get-GHAConsoleError
     Write-ActionFailureSummary -Record $Record -Synopsis 'Unable to retrieve permissions.'
@@ -115,7 +116,7 @@ process {
   #region    Permission Retrieval Messaging
   # Markdown Summary
   $null = $Summary.AppendLine('## Retrieved Permissions').AppendLine()
-  $null = $Summary.AppendLine("Retrieved permissions for for ``$Author``. Details:").AppendLine()
+  $null = $Summary.AppendLine("Retrieved permissions for for ``$User``. Details:").AppendLine()
   $null = $Summary.AppendLine('```text')
   $PSStyle.OutputRendering = $Plain
   $PermissionsBlock = $Permissions | Format-List -Property * | Out-String
@@ -132,11 +133,21 @@ process {
   #endregion Permission Retrieval Messaging
   
   $null = $Summary.AppendLine('## Result').AppendLine()
-  $Authorized  = $Permissions.Admin -or $Permissions.Maintain
+
+  # Check for authorization; if the user has any of the valid permissions, they
+  # are authorized for this action.
+  $Authorized = $false
+  foreach ($Permission in $ValidPermissions) {
+    if ($Permissions.$Permission) {
+      $Authorized = $true
+      break
+    }
+  }
+
   if ($Authorized) {
     # Markdown Summary
     $null = $Summary.AppendLine(
-      "**Success:** Author (``$Author``) may $($Texts.Target.Markdown)"
+      "**Success:** Author (``$User``) may $($Texts.Target.Markdown)"
     )
     $Summary.ToString() >> $ENV:GITHUB_STEP_SUMMARY
     # Console Logging
@@ -148,7 +159,7 @@ process {
   } else {
     # Markdown Summary
     $null = $Summary.AppendLine(
-      "**Failure:** Author (``$Author``) may not $($Texts.Target.Markdown)"
+      "**Failure:** Author (``$User``) may not $($Texts.Target.Markdown)"
     )
     $Summary.ToString() >> $ENV:GITHUB_STEP_SUMMARY
     # Console Logging / Throw Error

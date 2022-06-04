@@ -9,6 +9,8 @@ on:
       - ready_for_review
       - edited
       - synchronize
+permissions:
+  contents: read
 jobs:
   Test:
     name: Verify Status
@@ -20,66 +22,9 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - run: |
-          $MissingItemCount = 0
-          $Body = @'
-          ${{ github.event.pull_request.body }}
-          '@
-
-          # Style Setup
-          $NameStyle = $PSStyle.Foreground.BrightYellow
-          $StatusStyle = @{
-            Symbol = @{
-              Checked = '✔'
-              Missing = '✖'
-            }
-            Font = @{
-              Checked = $PSStyle.Bold + $PSStyle.Foreground.BrightBlue
-              Missing = $PSStyle.Bold + $PSStyle.Foreground.BrightMagenta
-            }
-          }
-
-          # Get Checklist Items
-          $CheckListItems = $Body -split "`n" | ForEach-Object {
-            if ($_ -match '- \[(?<Checked>.)\] \*\*(?<Name>.+):') {
-              $Status = $Matches.Checked -eq 'x' ? 'Checked' : 'Missing'
-              $Font = $StatusStyle.Font.$Status
-              [PSCustomObject]@{
-                Name = $NameStyle + $Matches.Name + $PSStyle.Reset
-                Prefix = $Font + $StatusStyle.Symbol.$Status + $PSStyle.Reset
-                Status = $Font + $Status + $PSStyle.Reset
-              }
-            }
-          }
-
-          # Get an appropriate padding width so the status values line up
-          $PaddingWidth = 0
-          $CheckListItems | ForEach-Object -Process {
-            $Width = ($_.Prefix + $_.Name).Length + 3 # pad right for the colon and space
-            if ($PaddingWidth -lt $Width) {
-              $PaddingWidth = $Width
-            }
-          }
-
-
-          # Display Results
-          foreach ($Item in $CheckListItems) {
-            if ($Item.Prefix -notmatch '✔') {
-              $MissingItemCount++
-            }
-
-            "$($Item.Prefix) $($Item.Name): ".PadRight($PaddingWidth) + $Item.Status
-          }
-
-          # Write summary message + exit if any checks are missing
-          if ($MissingItemCount) {
-            "" # Add a blank line before message
-            $DisplayCount = "$($PSStyle.Bold)$MissingItemCount$($PSStyle.BoldOff)"
-            @(
-              $PSStyle.Foreground.Magenta
-              $PSStyle.Underline
-              "Missing $DisplayCount of the check list items. Please review the PR checklist."
-              $PSStyle.Reset
-            ) -join ''
-            exit $MissingItemCount
-          }
+      - name: Checkout Repository
+        id: checkout_repo
+        uses: actions/checkout@v3
+      - name: Verify Checklist
+        id: verify_checklist
+        uses: ./.github/actions/verification/checklist/v1

@@ -26,7 +26,9 @@ param(
   [Parameter(Mandatory)]
   [string]$Owner,
   [Parameter(Mandatory)]
-  [string]$Repo
+  [string]$Repo,
+  [Parameter(Mandatory)]
+  [string]$Message
 )
 
 begin {
@@ -42,7 +44,7 @@ begin {
     - Need to grab the path to the body file for the PR comment.
   #>
   $GitHubFolder = Split-Path -Parent $PSScriptRoot | Split-Path -Parent
-  $ModuleFile = Resolve-Path -Path "$GitHubFolder/pwsh/gha/gha.psm1"
+  $ModuleFile = Resolve-Path -Path "$GitHubFolder/.pwsh/module/gha.psd1"
   | Select-Object -ExpandProperty Path
   Import-Module $ModuleFile -Force
   $Summary = New-Object -TypeName System.Text.StringBuilder
@@ -53,8 +55,7 @@ begin {
   $CachedAuthors = @{}
   # We convert to HTML to deal with GitHub's bad markdown parsing for comments, which treats soft
   # line breaks like hard line breaks. Because this comment isn't edited by a human, that's fine.
-  $BodyText = Resolve-Path -Path "$GitHubFolder/messages/Expectations.md"
-  | Get-Content -Raw
+  $BodyText = $Message
   | ConvertFrom-Markdown
   | Select-Object -ExpandProperty Html
 }
@@ -63,7 +64,7 @@ process {
   # Retrieve open PRs to this repo without an expectation comment; if this fails, end the script.
   # Nothing else will work anyway.
   try {
-    $OpenPRsWithoutExpectations = Get-OpenPRWithoutExpectations -Owner $Owner -Repo $Repo
+    $OpenPRsWithoutExpectations = Get-OpenPRWithoutExpectation -Owner $Owner -Repo $Repo
   } catch {
     $Record = $_ | Get-GHAConsoleError
     Write-ActionFailureSummary -Record $Record -Synopsis 'Unable to find open PRs.'

@@ -18,7 +18,6 @@
     The cmdlet checks the `baz` user's permissions in the `https://github.com/foo/bar` repository.
 #>
 
-{0}
 function Get-AuthorPermission {
     [CmdletBinding()]
     param(
