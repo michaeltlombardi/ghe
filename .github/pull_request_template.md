@@ -19,9 +19,10 @@
     x or by clicking on the box in the UI after your PR is submitted.
 -->
 
-- [x] **Contributor's Guide:** I have read the [contributors guide][contrib].
-- [x] **Style:** This PR adheres to the [style guide][style].
-- [x] **Descriptive Title:** This PR's title is a synopsis of the changes it proposes.
+- [ ] **Descriptive Title:** This PR's title is a synopsis of the changes it proposes.
+- [ ] **Summary:** This PR's summary describes the scope and intent of the change.
+- [ ] **Contributor's Guide:** I have read the [contributors guide][contrib].
+- [ ] **Style:** This PR adheres to the [style guide][style].
 
 <!--
     If your PR is a work in progress, please mark it as a draft or
