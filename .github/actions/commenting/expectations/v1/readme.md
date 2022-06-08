@@ -78,7 +78,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v3
       - name: Comment on Community PRs
-        uses: MicrosoftDocs/PowerShell-Docs/.github/actions/commenting/expectations/v1
+        uses: MicrosoftDocs/PowerShell-Docs/.github/actions/commenting/expectations/v1@main
         with:
           message_path: .github/messages/expectations.md
           token: ${{ github.token }}
@@ -112,7 +112,7 @@ jobs:
         shell: pwsh
     steps:
       - name: Comment on Community PRs
-        uses: ./.github/actions/commenting/expectations/v1
+        uses: MicrosoftDocs/PowerShell-Docs/.github/actions/commenting/expectations/v1@main
         with:
           token: ${{ github.token }}
           message_body: |

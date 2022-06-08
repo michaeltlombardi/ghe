@@ -83,7 +83,7 @@ jobs:
     steps:
       - name: Verify Checklist
         id: verify_checklist
-        uses: MicrosoftDocs/PowerShell-Docs/.github/actions/verification/checklist/v1
+        uses: MicrosoftDocs/PowerShell-Docs/.github/actions/verification/checklist/v1@main
 ```
 
 This workflow uses the `pull_request` trigger to verify whether the checklist included in the Pull
