@@ -6,6 +6,8 @@ on:
   pull_request_target:
     branches:
       - live
+permissions:
+  contents: read
 jobs:
   Test:
     name: Check Branch Permissions
@@ -18,13 +20,6 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v3
       - name: Authorized to Target Live Branch?
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          $Parameters = @{
-            Owner  = '${{ github.event.pull_request.base.repo.owner.login}}'
-            Repo   = '${{ github.event.pull_request.base.repo.name }}'
-            Author = '${{ github.event.pull_request.user.login }}'
-            TargetBranch = 'Live'
-          }
-          . ./.github/pwsh/scripts/Test-Authorization.ps1 @Parameters
+        uses: ./.github/actions/verification/authorization/v1
+        with:
+          token: ${{ github.token }}

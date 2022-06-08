@@ -14,14 +14,18 @@
     - `UserName`: Bright yellow
     - `Target`: Bold and bright magenta
 .EXAMPLE
+    ```powershell
     Format-ConsoleStyle -Text 'foo bar' -StyleComponent @(
         $PSStyle.Underline
         $PSStyle.Foreground.BrightGreen
     )
+    ```
 
     The cmdlet returns the string `foo bar` in bright green and underlined.
 .EXAMPLE
+    ```powershell
     Format-ConsoleStyle -Text 'hooray!' -DefinedStyle Success
+    ```
 
     The cmdlet returns  the string `hooray!` in bright blue and bolded.
 #>

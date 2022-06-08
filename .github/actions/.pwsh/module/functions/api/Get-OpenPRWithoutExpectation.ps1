@@ -17,7 +17,7 @@
     The cmdlet searches the `https://github.com/foo/bar` repository for open pull requests to the
     `main` branch which do not have an expectations comment on them already.
 #>
-function Get-OpenPRWithoutExpectations {
+function Get-OpenPRWithoutExpectation {
     [CmdletBinding()]
     param(
         [parameter(Mandatory)]

@@ -2,8 +2,8 @@
 .SYNOPSIS
     Retrieves repository permissions for a user.
 .DESCRIPTION
-    Retrieves repository permissions for a user, returning a hashtable that enumerates whether the
-    user can admin, maintain, push, triage, and/or pull.
+    This cmdlet retrieves repository permissions for a user, returning a hashtable that enumerates
+    whether the user can admin, maintain, push, triage, and/or pull.
 .PARAMETER Owner
     The owner of the repository to check the user's permissions in. For `https://github.com/foo/bar`
     the owner is `foo`.
@@ -18,7 +18,6 @@
     The cmdlet checks the `baz` user's permissions in the `https://github.com/foo/bar` repository.
 #>
 
-{0}
 function Get-AuthorPermission {
     [CmdletBinding()]
     param(

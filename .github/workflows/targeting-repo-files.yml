@@ -1,15 +1,16 @@
 # This workflow verifies that an author submitting a pull request to the main
 # branch to modify repository files is authorized to do so; only users with
-# maintainer or admin rights may modify the PowerShell module/scripts or the
-# workflow definitions.
+# maintainer or admin rights may modify the actions or the workflow definitions.
 name: Authorization
 on:
   pull_request_target:
     branches:
       - main
     paths:
-      - .github/pwsh/**
+      - .github/actions/**
       - .github/workflows/**
+permissions:
+  contents: read
 jobs:
   Test:
     name: Check Repo File Permissions
@@ -22,13 +23,7 @@ jobs:
         id: checkout_repo
         uses: actions/checkout@v3
       - name: Authorized to Modify Repo Files?
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          $Parameters = @{
-            Owner  = '${{ github.event.pull_request.base.repo.owner.login}}'
-            Repo   = '${{ github.event.pull_request.base.repo.name }}'
-            Author = '${{ github.event.pull_request.user.login }}'
-            TargetPath = @('.github/pwsh/**', '.github/workflows/**')
-          }
-          . ./.github/pwsh/scripts/Test-Authorization.ps1 @Parameters
+        uses: ./.github/actions/verification/authorization/v1
+        with:
+          token: ${{ github.token }}
+          target: path:.github/actions/,.github/workflows/
