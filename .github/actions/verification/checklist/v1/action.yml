@@ -94,7 +94,7 @@ runs:
         Write-Output "::endgroup::"
 
         Write-Output "::group::Parameter Validation"
-        $Parameters = Get-Parameter -ParameterHandler $ParameterHandlers
+        $Parameters = Get-ActionScriptParameter -ParameterHandler $ParameterHandlers
         Write-Output "::endgroup::"
         
         Write-Output "::group::Verify Checklist"

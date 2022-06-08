@@ -65,6 +65,13 @@ Primarily useful for converting error messages into readable lines.
 
 For more information, review the [source code][utility-Format-GHAConsoleText]
 
+### `Get-ActionScriptParameter`
+
+This cmdlet uses parameter handlers to retrieve and validate the inputs from a GitHub Action,
+returning a hashtable of parameters to splat on an action script.
+
+For more information, review the [source code][utility-Get-ActionScriptParameter]
+
 ### `Get-GHAConsoleError`
 
 This cmdlet returns an alternate view of an error record for the GH CLI. It limits the object
@@ -74,13 +81,6 @@ object (which for GH CLI errors is always the command-line arguments for the fai
 It can retrieve errors from the `$error` variable or act on an input object.
 
 For more information, review the [source code][utility-Get-GHAConsoleError]
-
-### `Get-Parameter`
-
-This cmdlet uses parameter handlers to retrieve and validate the inputs from a GitHub Action,
-returning a hashtable of parameters to splat on an action script.
-
-For more information, review the [source code][utility-Get-Parameter]
 
 ### `Get-VersionedContentStatus`
 
@@ -133,7 +133,7 @@ For more information, review the [source code][utility-Write-ActionFailureSummar
 This cmdlet writes a console log message declaring that a parameter value has been determined,
 including the name and colorized value. It uses `Write-Host` to avoid polluting the output stream,
 allowing it to be log this information in parameter handler scriptblocks invoked by the
-`Get-Parameter` cmdlet.
+`Get-ActionScriptParameter` cmdlet.
 
 For more information, review the [source code][utility-Write-HostParameter]
 
@@ -148,7 +148,7 @@ For more information, review the [source code][utility-Write-HostParameter]
 [utility-Format-ConsoleStyle]:        ./functions/utility/Format-ConsoleStyle.ps1
 [utility-Format-GHAConsoleText]:      ./functions/utility/Format-GHAConsoleText.ps1
 [utility-Get-GHAConsoleError]:        ./functions/utility/Get-GHAConsoleError.ps1
-[utility-Get-Parameter]:              ./functions/utility/Get-Parameter.ps1
+[utility-Get-ActionScriptParameter]:              ./functions/utility/Get-ActionScriptParameter.ps1
 [utility-Get-VersionedContentStatus]: ./functions/utility/Get-VersionedContentStatus.ps1
 [utility-New-CliErrorRecord]:         ./functions/utility/New-CliErrorRecord.ps1
 [utility-New-InvalidParameterError]:  ./functions/utility/New-InvalidParameterError.ps1
