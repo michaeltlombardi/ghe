@@ -45,11 +45,11 @@ inputs:
       it must be specified.
     required: true
     default: ${{ github.event.pull_request.body }}
-  pull_request_url:
+  reference_url:
     description: |
-      The URL of the GitHub Pull Request to inspect for checklist completion. If using this action
-      on a `pull_request` or `pull_request_target` event, this is handled automatically. Otherwise,
-      it must be specified.
+      The URL of the GitHub Pull Request, issue, discussion, or comment to inspect for checklist
+      completion. If using this action on a `pull_request` or `pull_request_target` event, this is
+      handled automatically. Otherwise, it must be specified.
     required: true
     default: ${{ github.event.pull_request.url }}
 runs:
@@ -57,7 +57,7 @@ runs:
   steps:
     - shell: pwsh
       env:
-        INPUT_PULL_REQUEST_URL: ${{ inputs.pull_request_url }}
+        INPUT_REFERENCE_URL: ${{ inputs.reference_url }}
         INPUT_BODY:  ${{ inputs.body }}
       run: |
         Write-Output "::group::Generic Setup"

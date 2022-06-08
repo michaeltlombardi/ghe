@@ -116,9 +116,9 @@ default: ${{ github.event.pull_request.body }}
 
 ### `pull_request_url`
 
-The URL of the GitHub Pull Request to inspect for checklist completion. If using this action
-on a `pull_request` or `pull_request_target` event, this is handled automatically. Otherwise,
-it must be specified.
+The URL of the GitHub Pull Request, issue, discussion, or comment to inspect for checklist
+completion. If using this action on a `pull_request` or `pull_request_target` event, this is handled
+automatically. Otherwise, it must be specified.
 
 ```yaml
 required: true

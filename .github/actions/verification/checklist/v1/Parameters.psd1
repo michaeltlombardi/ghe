@@ -30,16 +30,16 @@
     }
 
     @{
-      Name          = 'Pull_Request_Url'
+      Name          = 'Reference_Url'
       Type          = 'string'
       IfNullOrEmpty = {
         param($ErrorTarget)
 
         $ErrorDetails = @{
-          Name    = 'PullRequestUrl'
+          Name    = 'ReferenceUrl'
           Type    = 'Missing'
           Message = @(
-            'Could not determine the URL of the PR;'
+            'Could not determine the URL of the item;'
             'was it passed as an input to the action?'
           ) -join ' '
           Target  = $ErrorTarget
@@ -51,8 +51,8 @@
       Process = {
         param($Parameters, $Value, $ErrorTarget)
 
-        $Parameters.PullRequestUrl = $Value
-        Write-HostParameter -Name PullRequestUrl -Value $Parameters.PullRequestUrl
+        $Parameters.ReferenceUrl = $Value
+        Write-HostParameter -Name ReferenceUrl -Value $Parameters.ReferenceUrl
 
         return $Parameters
       }
