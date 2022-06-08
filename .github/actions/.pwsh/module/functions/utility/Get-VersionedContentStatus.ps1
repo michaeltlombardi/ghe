@@ -3,7 +3,7 @@
     Returns the change status of versioned content for a pull request.
 .DESCRIPTION
     This cmdlet returns the change status of versioned content for a pull request. This information
-    can be used to analyze whether a pull request has modified all of the files it should.
+    can be used to analyze whether a pull request has modified every file it should.
 
     Pull requests for versioned content can be tricky, requiring an author to modify the same file
     in multiple folders. This cmdlet helps clarify if changes have been made across all the versions
@@ -21,7 +21,7 @@
     The list of changed files from a pull request and their change type. This should usually be
     retrieved by running `Get-PullRequestChangedFile`.
 .EXAMPLE
-    ```pwsh
+    ```powershell
     $Changes = @(
         @{
             ChangeType = 'modified'

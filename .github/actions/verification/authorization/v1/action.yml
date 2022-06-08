@@ -1,20 +1,9 @@
 name: Authorization
 description: |
-  Checks to see whether a user is authorized to perform a certain action. For example, to target the
-  `live` branch of a repository or to submit a PR editing repo configuration.
+  Checks to see whether a user may perform a certain action. For example, to target the `live`
+  branch of a repository or to submit a PR editing repo configuration.
 author: PowerShell Docs Team
 inputs:
-  repository:
-    description: |
-      The full name of a repository; to target `https://github.com/MicrosoftDocs/PowerShell-Docs`,
-      the value should be `MicrosoftDocs/PowerShell-Docs`.
-    required: true
-    default: ${{ github.repository }}
-  user:
-    description: |
-      The GitHub login ID to check permissions for.
-    required: true
-    default: ${{ github.event.pull_request.user.login }}
   permissions:
     description: |
       The permissions a user requires to perform a given task. Must be a comma-separated string of
@@ -25,8 +14,19 @@ inputs:
       - `Pull`
       - `Push`
       - `Triage`
+
+      If a user has _any_ of the specified permissions, they are authorized.
     required: false
     default: 'Maintain,Admin'
+  repository:
+    description: |
+      The full name of a repository; to target `https://github.com/MicrosoftDocs/PowerShell-Docs`,
+      the value should be `MicrosoftDocs/PowerShell-Docs`.
+
+      By default, the value is the repository the _workflow_ is defined in. Unless you are running
+      this action against another repository, you should not need to specify this value.
+    required: true
+    default: ${{ github.repository }}
   target:
     description: |
       The branches or globbed file paths to verify authorization to target for changes. To specify
@@ -43,6 +43,11 @@ inputs:
       The GITHUB_TOKEN to use to authenticate API calls to verify the user's permissions for the
       repository. This **must** be passed to the action.
     required: true
+  user:
+    description: |
+      The GitHub login ID to check permissions for.
+    required: true
+    default: ${{ github.event.pull_request.user.login }}
 runs:
   using: composite
   steps:

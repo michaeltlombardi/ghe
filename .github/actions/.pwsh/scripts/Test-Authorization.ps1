@@ -1,44 +1,61 @@
 <#
 .SYNOPSIS
-  Checks if a PR author is authorized to submit this PR.
+  Checks if a user may perform an action.
 .DESCRIPTION
-  Checks if a PR author is authorized to submit this PR. An author is authorized if they have the
-  **Maintain** or **Admin** permissions. If the author is not permitted to submit this PR, the
-  script (and any GHA workflow calling it) fails.
+  Checks if a user may perform an action. A user is authorized if they have one or more of the
+  specified permissions. If the user is not authorized, the script (and any GHA workflow calling it)
+  fails.
 .PARAMETER Owner
-  The owner of the repository to check the author's permissions in. For `https://github.com/foo/bar`
+  The owner of the repository to check the user's permissions in. For `https://github.com/foo/bar`
   the owner is `foo`.
 .PARAMETER Repo
-  The name of the repository to check the author's permissions in. For `https://github.com/foo/bar`
-  the repo is `bar`.
+  The name of the repository to check the user's permissions in. For `https://github.com/foo/bar`
+  the name is `bar`.
 .PARAMETER User
-  The username to retrieve permissions for.
+  The GitHub login to retrieve permissions for.
 .PARAMETER TargetBranch
-  Specifies the name of a branch requring maintainer permissions to target.
+  Specifies the name of a branch requiring permissions to target.
 .PARAMETER TargetPath
-  Specifies the path to one or more files requiring maintainer permissions to modify.
+  Specifies the path to one or more files requiring permissions to modify.
+.PARAMETER ValidPermissions
+  One or more GitHub permissions the user must have. If the user has any of the specified
+  permissions, they are authorized for the action. By default, a user must have the `Admin` or
+  `Maintain` permission.
+
+  GitHub permissions include:
+
+  - `Admin`
+  - `Maintain`
+  - `Pull`
+  - `Push`
+  - `Triage`
 .EXAMPLE
+  ```powershell
   ./.github/pwsh/scripts/Test-Authorization.ps1 -Owner foo -Repo bar -Author baz -TargetBranch live
+  ```
 
-  The script checks the permissions of the `baz` user for https://github.com/foo/bar`. If `baz` has
+  The script checks the permissions of the `baz` user for `https://github.com/foo/bar`. If `baz` has
   maintainer or admin permissions, the script exits without error. If they do not, the script throws
-  an error declaring the `baz` does not have sufficient permissions to target the `live` branch.
+  an error declaring the `baz` does not have enough permissions to target the `live` branch.
 .EXAMPLE
-  ./.github/pwsh/scripts/Test-Authorization.ps1 -Owner foo -Repo bar -Author baz -TargetPath @(
+  ```powershell
+  $Paths = @(
     '.github/pwsh'
-    '.github/workflows
+    '.github/workflows'
   )
+  ./.github/pwsh/scripts/Test-Authorization.ps1 -Owner foo -Repo bar -Author baz -TargetPath $Paths
+  ```
 
   The script checks the permissions of the `baz` user for https://github.com/foo/bar`. If `baz` has
   maintainer or admin permissions, the script exits without error. If they do not, the script throws
-  an error declaring the `baz` does not have sufficient permissions to target either the `pwsh` or
+  an error declaring the `baz` does not have enough permissions to target either the `pwsh` or
   `workflows` folder.
 .NOTES
   The **TargetBranch** and **TargetPath** parameters are for convenience; GitHub repositories do not
-  have a built in way to define permissions for branches or folders except for branch protection,
-  which is not sufficient for this purpose. To ensure this script is effective, use the **branches**
-  and **paths** settings in the workflow when defining a **pull_request_target** job trigger.
-#>
+  have a built-in way to define permissions for branches or folders except for branch protection,
+  which isn't enough for this purpose. To ensure this script is effective, use the **branches** and
+  **paths** settings in the workflow when defining a **pull_request_target** job trigger.
+  #>
 [cmdletbinding(DefaultParameterSetName='Branch')]
 param(
   [Parameter(Mandatory)]
@@ -51,7 +68,8 @@ param(
   [string]$TargetBranch,
   [Parameter(Mandatory, ParameterSetName='Path')]
   [string[]]$TargetPath,
-  [string[]]$ValidPermissions
+  [ValidateSet('Admin', 'Maintain', 'Pull', 'Push', 'Triage')]
+  [string[]]$ValidPermissions = @('Admin', 'Maintain')
 )
 
 begin {

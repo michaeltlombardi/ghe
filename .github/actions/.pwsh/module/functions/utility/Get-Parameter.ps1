@@ -1,3 +1,50 @@
+<#
+.SYNOPSIS
+    Retrieves and validates parameters for GHA
+.DESCRIPTION
+    This cmdlet uses parameter handlers to retrieve and validate the inputs from a GitHub Action,
+    returning a hashtable of parameters to splat on an action script.
+.PARAMETER ParameterHandler
+    Specify one or more parameter handlers, such as those as kept in an action's `Parameters.psd1`
+    file. Make sure the hashtable in those data files is converted to a **PSCustomObject**.
+    
+    Parameter handlers have the following properties:
+
+    - **Name:** The name of the _input_ parameter to the action. This is
+      used to retrieve the value from the environment variable (`INPUT_*`)
+      and is distinct from the parameters that need to be passed to the
+      script.
+    - **Type:** The dotnet type of the input. Currently unused, but may be
+      useful for casting later.
+    - **IfNullOrEmpty:** A scriptblock that will be invoked if the value
+      retrieval for that parameter returns `$null` or an empty string or
+      array. It takes one input (`$ErrorTarget`) and should either throw
+      an exception (if the parameter is mandatory and may not be null) or
+      do nothing. It should not return any objects to the output stream.
+    - **Process:** A scriptblock that will be invoked if prior steps for
+      the parameter do not throw any exceptions. It takes three arguments
+      (`$Parameters`, `$Value`, and `$ErrorTarget`). `$Parameters` is the
+      current hashtable with any already-validated parameters defined. It
+      is what will eventually be splatted to the action script. This
+      scriptblock should validate the script parameter(s) it gets from the
+      action's inputs, add them to the hash, and return the hash. If the
+      parameters fail validation, it should throw an exception to avoid
+      calling the script in a broken state.
+.EXAMPLE
+    ```powershell
+    $ParameterHandlers = Join-Path -Path $ActionPath -ChildPath Parameters.psd1 |
+        ForEach-Object -Process { Import-PowerShellDataFile -Path $_ } |
+        Select -ExpandProperty Parameters |
+        ForEach-Object -Process { [pscustomobject]$_ }
+    $Parameters = Get-Parameter -ParameterHandler $ParameterHandlers
+    ```
+
+    This example reads in the data file containing the parameter handlers and converts them to
+    **PSCustomObjects** before passing them to the cmdlet. The cmdlet retrieves the inputs from
+    environment variables and uses the handlers to process them, eventually returning a hashtable
+    containing the parameters for that action. If any parameter fails validation, the cmdlet throws
+    an exception and the run ends.
+#>
 function Get-Parameter {
     [CmdletBinding()]
     param(

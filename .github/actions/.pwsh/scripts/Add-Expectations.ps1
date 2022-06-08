@@ -4,7 +4,7 @@
 .DESCRIPTION
   This script ensures all open community PRs have an expectations comment. It searches the
   repository for open pull requests without the comment (identified by an HTML comment with a
-  special id in it) and then checks each open pull request to see if the author is a maintainer or
+  special ID in it) and then checks each open pull request to see if the author is a maintainer or
   a community member. If the author is a maintainer, the script skips that PR. If the author is a
   community member, it writes the contents of the `Expectations.md` rendered as HTML as a comment
   on the PR.
@@ -14,12 +14,23 @@
 .PARAMETER Repo
   The name of the repository to search for uncommented PRs. For `https://github.com/foo/bar`, the
   repo is `bar`.
-.EXAMPLE
-  ./.github/pwsh/scripts/Add-Expectations.ps1 -Owner Foo -Repo Bar
+.PARAMETER Message
+  The message to write on uncommented PRs. Must be a single string and should be written as markdown
+  for best results. The message should include somewhere in it the following HTML comment:
 
-  The script searches https://github.com/foo/bar` for open pull requests targeting the `main` branch
-  which do not already have an expectations comment. If the PR author is not a maintainer, it adds
-  the comment.
+  `<!-- GHA.Comment.Id.Community.Expectations -->`
+
+  Failure to include that comment in the message causes the script to add the comment to PRs it
+  already commented on, as it uses the presence of that annotation to find the expectations comment.
+.EXAMPLE
+  ```powershell
+  $Message = Get-Content -Raw ./messages/expectations.md
+  ./Add-Expectations.ps1 -Owner Foo -Repo Bar -Message $Message
+  ```
+
+  The script searches `https://github.com/foo/bar` for open pull requests targeting the `main`
+  branch which do not already have an expectations comment. If the PR author is not a maintainer, it
+  adds the text from the `expectations.md` file rendered as HTML as a comment on the PR.
 #>
 [cmdletbinding()]
 param(
@@ -28,6 +39,7 @@ param(
   [Parameter(Mandatory)]
   [string]$Repo,
   [Parameter(Mandatory)]
+  [Alias('Markdown', 'Text')]
   [string]$Message
 )
 

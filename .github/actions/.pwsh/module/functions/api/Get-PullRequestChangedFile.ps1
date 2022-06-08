@@ -2,8 +2,9 @@
 .SYNOPSIS
     Retrieves the list of file changes for a PR
 .DESCRIPTION
-    Retrieves the list of file changes for a PR, returning an array of relative file paths and the
-    change type: `added`, `removed`, `modified`, `renamed`, `copied`, `changed`, or `unchanged`.
+    This cmdlet retrieves the list of file changes for a PR, returning an array of relative file
+    paths and the change type: `added`, `removed`, `modified`, `renamed`, `copied`, `changed`, or
+    `unchanged`.
 .PARAMETER Owner
     The owner of the repository the pull request is in. For `https://github.com/foo/bar/pull/10` the
     owner is `foo`.

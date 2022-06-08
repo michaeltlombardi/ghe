@@ -1,6 +1,41 @@
 name: Checklist
 description: |
-  Inspects the checklist items on a pull request to see if they have all been filled out.
+  Inspects the checklist items on a pull request to see if they have all been filled out. It only
+  looks for mandatory checklist items. If any mandatory checklist items are not checked, the action
+  fails. It writes a summary and console logs indicating which mandatory checklist items were not
+  checked.
+
+  To be interpreted by this action as mandatory checklist items, they must be formatted in Markdown to
+  follow a specific syntax:
+
+  ```markdown
+  - [ ] **Item Name:** Explanation of the item`
+  ```
+
+  To be recognized as a mandatory checklist item by this action, the item must:
+
+  - use valid syntax for checklists on GitHub (i.e. `- [ ]` for an unchecked item and `- [x]` for a
+    checked item)
+  - immediately follow the checklist syntax with a single space and then two asterisks (`**`)
+  - include one or more characters, specifying the name of the mandatory checklist item
+  - close the name of the item with a colon followed by two asterisks (`:**`)
+
+  Including explanatory text after the mandatory checklist item declaration is strictly optional but
+  strongly encouraged.
+
+  This example code block illustrates how this action parses Markdown and what is interpreted as a
+  valid mandatory checklist item for this action to verify:
+
+  ```markdown
+  A paragraph is not a checklist item
+
+  - This is a list item, but not a checklist item.
+  - [ ] This is a checklist item, but not mandatory.
+  - [ ] Not Bold: This is a checklist item, but not recognized as mandatory.
+  - [ ] **Colon Outside**: This is a checklist item, but not recognized as mandatory.
+  - [ ] **Foo:** This is a mandatory checklist item named `Foo`. It is not checked.
+  - [x] **Bar:** This is a mandatory checklist item named `Bar`. It is checked.
+  ```
 author: PowerShell Docs Team
 inputs:
   body:

@@ -12,16 +12,22 @@ inputs:
     default: ${{ github.repository }}
   message_body:
     description: |
-      The message in markdown to write as the comment body.
+      The message in Markdown to write as the comment body. This input should not be used with
+      **message_path**; if it is, the action will write a warning in the logs and use the
+      **message_body** when commenting on community Pull Requests.
     required: false
   message_path:
     description: |
-      The path to the markdown file to write as the comment body.
+      The path to the Markdown file to write as the comment body. This input should not be used with
+      **message_body**; if it is, the action will write a warning in the logs and use the
+      **message_body** when commenting on community Pull Requests.
     required: false
   token:
     description: |
-      The GITHUB_TOKEN to use to authenticate API calls to verify the user's permissions for the
-      repository. This **must** be passed to the action.
+      The `GITHUB_TOKEN` to use to authenticate API calls to verify whether a Pull Request's author
+      is a maintainer or community member and to comment on open community Pull Requests.
+
+      This **must** be passed to the action.
     required: true
 runs:
   using: composite

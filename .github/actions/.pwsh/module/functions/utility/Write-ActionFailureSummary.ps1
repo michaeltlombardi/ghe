@@ -3,7 +3,7 @@
     Writes a standardized summary entry when a GHA fails due to thrown error.
 .DESCRIPTION
     Writes a standardized summary entry when a GHA fails due to thrown error. It includes the record
-    of the error in a markdown codeblock under the heading "Action Failure."
+    of the error in a Markdown codeblock under the heading "Action Failure."
 .PARAMETER Synopsis
     Specifies a synopsis for what the action was trying to do when it failed.
 .PARAMETER Record

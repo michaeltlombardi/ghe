@@ -2,8 +2,8 @@
 .SYNOPSIS
     Adds a comment to a pull request via GitHub CLI.
 .DESCRIPTION
-    Adds a comment to a pull request via GitHub CLI by specifying a raw markdown string or the path
-    to a markdown file containing the comment to write.
+    This cmdlet adds a comment to a pull request via GitHub CLI by specifying a raw Markdown string
+    or the path to a markdown file containing the comment to write.
 .PARAMETER Owner
     The owner of the repository the pull request is in. For `https://github.com/foo/bar/pull/10` the
     owner is `foo`.
