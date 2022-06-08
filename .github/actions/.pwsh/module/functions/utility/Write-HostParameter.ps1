@@ -5,7 +5,7 @@
     This cmdlet writes a console log message declaring that a parameter value has been determined,
     including the name and colorized value. It uses `Write-Host` to avoid polluting the output
     stream, allowing it to be log this information in parameter handler scriptblocks invoked by the
-    `Get-Parameter` cmdlet.
+    `Get-ActionScriptParameter` cmdlet.
 .PARAMETER Name
     Specify the name of the parameter to display.
 .PARAMETER Value

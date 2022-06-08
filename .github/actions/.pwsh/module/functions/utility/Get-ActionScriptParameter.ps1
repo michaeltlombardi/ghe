@@ -36,7 +36,7 @@
         ForEach-Object -Process { Import-PowerShellDataFile -Path $_ } |
         Select -ExpandProperty Parameters |
         ForEach-Object -Process { [pscustomobject]$_ }
-    $Parameters = Get-Parameter -ParameterHandler $ParameterHandlers
+    $Parameters = Get-ActionScriptParameter -ParameterHandler $ParameterHandlers
     ```
 
     This example reads in the data file containing the parameter handlers and converts them to
@@ -45,7 +45,7 @@
     containing the parameters for that action. If any parameter fails validation, the cmdlet throws
     an exception and the run ends.
 #>
-function Get-Parameter {
+function Get-ActionScriptParameter {
     [CmdletBinding()]
     param(
         [pscustomobject[]]$ParameterHandler

@@ -4,6 +4,32 @@
 
 Checks if a user may perform an action.
 
+## Syntax
+
+### Branch (Default)
+
+```syntax
+.\Test-Authorization.ps1
+    -Owner <string>
+    -Repo <string>
+    -User <string>
+    -TargetBranch <string>
+    [-ValidPermissions <string[]>]
+    [<CommonParameters>]
+```
+
+### Path
+
+```syntax
+.\Test-Authorization.ps1
+    -Owner <string>
+    -Repo <string>
+    -User <string>
+    -TargetPath <string[]>
+    [-ValidPermissions <string[]>]
+    [<CommonParameters>]
+```
+
 ## Description
 
 Checks if a user may perform an action. A user is authorized if they have one or more of the

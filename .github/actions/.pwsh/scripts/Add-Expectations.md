@@ -4,6 +4,18 @@
 
 Ensures all open community PRs have an expectations comment.
 
+## Syntax
+
+### __AllParameterSets (default)
+
+```syntax
+.\Add-Expectations.ps1
+    [-Owner] <string>
+    [-Repo] <string>
+    [-Message] <string>
+    [<CommonParameters>]
+```
+
 ## Description
 
 This script ensures all open community PRs have an expectations comment. It searches the repository

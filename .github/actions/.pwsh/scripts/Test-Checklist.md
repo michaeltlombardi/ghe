@@ -4,6 +4,17 @@
 
 Inspects Markdown to find checklist items and their status
 
+## Syntax
+
+### __AllParameterSets (Default)
+
+```syntax
+.\Test-Checklist.ps1
+    [-Body] <string>
+    [[-ReferenceUrl] <string>]
+    [<CommonParameters>]
+```
+
 ## Description
 
 This script inspects the Markdown body of a Pull Request or GitHub comment to find mandatory
