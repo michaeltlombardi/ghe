@@ -1,14 +1,13 @@
 # This workflow verifies that an author submitting a pull request to the main
 # branch to modify repository files is authorized to do so; only users with
-# maintainer or admin rights may modify the PowerShell module/scripts or the
-# workflow definitions.
+# maintainer or admin rights may modify the actions or the workflow definitions.
 name: Authorization
 on:
   pull_request_target:
     branches:
       - main
     paths:
-      - .github/pwsh/**
+      - .github/actions/**
       - .github/workflows/**
 permissions:
   contents: read
@@ -27,3 +26,4 @@ jobs:
         uses: ./.github/actions/verification/authorization/v1
         with:
           token: ${{ github.token }}
+          target: path:.github/actions/,.github/workflows/
