@@ -51,7 +51,7 @@ jobs:
         shell: pwsh
     steps:
       - name: Authorized to Target Live Branch?
-        uses: MicrosoftDocs/PowerShell-Docs/.github/actions/verification/authorization/v1
+        uses: MicrosoftDocs/PowerShell-Docs/.github/actions/verification/authorization/v1@main
         with:
           token: ${{ github.token }}
 ```
