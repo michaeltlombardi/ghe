@@ -1,0 +1,23 @@
+blank_issues_enabled: false
+contact_links:
+  - name: PowerShell Product Feedback
+    url: https://github.com/PowerShell/PowerShell/issues/new/choose
+    about: Please open feature requests for current PowerShell here.
+  - name: Crescendo Product Feedback
+    url: https://github.com/PowerShell/Crescendo/issues/new/choose
+    about: Please open feature requests for Crescendo here.
+  - name: PlatyPS Product Feedback
+    url: https://github.com/PowerShell/PlatyPS/issues/new/choose
+    about: Please open feature requests for PlatyPS here.
+  - name: PSScriptAnalyzer Product Feedback
+    url: https://github.com/PowerShell/PSScriptAnalyzer/issues/new/choose
+    about: Please open feature requests for PSScriptAnalyzer here.
+  - name: SecretManagement Product Feedback
+    url: https://github.com/PowerShell/SecretManagement/issues/new/choose
+    about: Please open feature requests for SecretManagement here.
+  - name: SecretStore Product Feedback
+    url: https://github.com/PowerShell/SecretStore/issues/new/choose
+    about: Please open feature requests for SecretStore here.
+  - name: Community Support
+    url: https://docs.microsoft.com/powershell/scripting/community/community-support
+    about: PowerShell Support Questions/Help
