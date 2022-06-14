@@ -6,7 +6,7 @@
   repository for open pull requests without the comment (identified by an HTML comment with a
   special ID in it) and then checks each open pull request to see if the author is a maintainer or
   a community member. If the author is a maintainer, the script skips that PR. If the author is a
-  community member, it writes the contents of the `Expectations.md` rendered as HTML as a comment
+  community member, writes the contents of the message rendered as HTML from Markdown as a comment
   on the PR.
 .PARAMETER Owner
   The owner of the repository to search for uncommented PRs. For `https://github.com/foo/bar`, the
