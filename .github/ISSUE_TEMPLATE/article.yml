@@ -1,4 +1,4 @@
-name: "New Document Request/Idea 🆕"
+name: "💡 New Document Request/Idea"
 description: >-
   Suggest a new document or major rewrite of an existing one.
 labels:
@@ -14,12 +14,12 @@ body:
         moving on.
       options:
         - label: >-
-            Existing Issue: Search the existing issues for this repository. If there is an issue
+            **Existing Issue:** Search the existing issues for this repository. If there is an issue
             that fits your needs do not file a new one. Subscribe, react, or comment on that issue
             instead.
           required: true
         - label: >-
-            Descriptive Title: Write the title for this issue as a short synopsis. If possible,
+            **Descriptive Title:** Write the title for this issue as a short synopsis. If possible,
             provide context. For example, "Document new `Get-Foo` cmdlet" instead of "New cmdlet."
           required: true
   - type: dropdown
@@ -46,7 +46,7 @@ body:
       description: >-
         Write a clear and concise description of the proposed document. Why is it needed? What gap
         will it fill? Who is the intended audience? What scenarios will it address?
-      placeholder: >
+      placeholder: |
         Try formulating the need for this documentation as a user story.
 
         > As a user of <module>, I need a document about <topic> so that <synopsis of value>.
@@ -92,6 +92,6 @@ body:
         permalink for its source or the live page. If only a section of the article is relevant, use
         the permalink to the lines for the most relevant section of the source or the anchor link to
         the nearest header for the relevant content instead of the page itself.
-      placeholder: >
+      placeholder: |
         - https://github.com/MicrosoftDocs/PowerShell-Docs-Modules/blob/2d7879a4c26b4a9d3aac906d18847f27ae509cdd/reference/docs-conceptual/Crescendo/overview.md?plain=1#L31-L38
         - https://docs.microsoft.com/powershell/utility-modules/crescendo/overview?view=ps-modules#crescendo-specific-terminology
