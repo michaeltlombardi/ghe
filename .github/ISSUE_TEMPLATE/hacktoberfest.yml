@@ -1,0 +1,41 @@
+name: "🎃 Hacktoberfest 2022"
+description: >-
+  File a new issue to tackle quality improvement opportunities for Hacktoberfest 2022
+title: "Hacktoberfest: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue's related to [Hacktoberfest 2022][01]. For more info, see the meta-issue below:
+        
+        - MicrosoftDocs/PowerShell-Docs#123456
+
+        [01]: https://hacktoberfest.com/participation/
+  - type: dropdown
+    id: QualityArea
+    validations:
+      required: true
+    attributes:
+      label: Quality Areas
+      description: Select one or more quality areas to improve on with your contribution.
+      multiple: true
+      options:
+        - Aliases
+        - Format code samples
+        - Format command syntax
+        - Link references
+        - Markdownlint
+        - Spelling
+  - type: textarea
+    id: ArticleList
+    validations:
+      required: true
+    attributes:
+      label: Article List
+      description: >-
+        Specify the articles you are committing to work on, one per line. You can specify each entry
+        as a path or by the article's title. If you specify an article by path for a reference
+        article, such as a cmdlet or about topic, specify the version segment as `*.*`.
+      placeholder: |
+        - reference/*.*/Microsoft.PowerShell.Core/Add-History.md
+        - Add-History
