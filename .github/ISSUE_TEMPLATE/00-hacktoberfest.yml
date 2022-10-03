@@ -22,12 +22,12 @@ body:
 
         For more information, see the relevant section in the meta issue:
 
-        - [Aliases][aliases]
-        - [Formatting code samples][code-samples]
-        - [Formatting command syntax][command-syntax]
-        - [Link References][link-refs]
-        - [Markdown linting][md-linting]
-        - [Spelling][spelling]
+        - [Aliases][aliases]: Ensure cmdlet aliases are documented
+        - [Formatting code samples][code-samples]: Ensure proper casing, line length, etc in code samples
+        - [Formatting command syntax][command-syntax]: Ensure proper casing and formatting for command syntax, including cmdlets, types, etc.
+        - [Link References][link-refs]: Ensure links in conceptual docs are defined as numbered references
+        - [Markdown linting][md-linting]: Ensure content follows markdownlint rules
+        - [Spelling][spelling]: Ensure proper casing and spelling for words
 
         [aliases]: https://github.com/MicrosoftDocs/PowerShell-Docs/issues/9257#aliases
         [code-samples]: https://github.com/MicrosoftDocs/PowerShell-Docs/issues/9257#formatting-code-samples
@@ -37,12 +37,12 @@ body:
         [spelling]: https://github.com/MicrosoftDocs/PowerShell-Docs/issues/9257#spelling
       multiple: true
       options:
-        - "**Aliases**: Ensure cmdlet aliases are documented"
-        - "**Formatting code samples**: Ensure proper casing, line length, etc in code samples"
-        - "**Formatting command syntax**: Ensure proper casing and formatting for command syntax, including cmdlets, types, etc."
-        - "**Link References**: Ensure links in conceptual docs are defined as numbered references"
-        - "**Markdown linting**: Ensure content follows markdownlint rules"
-        - "**Spelling**: Ensure proper casing and spelling for words"
+        - Aliases
+        - Formatting code samples
+        - Formatting command syntax
+        - Link References
+        - Markdown linting
+        - Spelling
   - type: textarea
     id: ArticleList
     validations:
