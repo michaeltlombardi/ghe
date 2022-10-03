@@ -1,7 +1,9 @@
 name: "🎃 Hacktoberfest 2022"
-description: >-
-  File a new issue to tackle quality improvement opportunities for Hacktoberfest 2022
-title: "Hacktoberfest: "
+description: |
+  Participate in Hacktoberfest 2022 by reviewing the [instructions][i] and filing a new issue to tackle quality improvement opportunities.
+
+  [i]: https://github.com/MicrosoftDocs/PowerShell-Docs/issues/9257
+title: "🎃 Hacktoberfest: "
 body:
   - type: markdown
     attributes:
