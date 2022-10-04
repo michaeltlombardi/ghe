@@ -17,7 +17,7 @@ jobs:
         regex: '^### Quality Areas\\s*^.*Aliases.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.shouldLabelAliases.match != '' }}
+      if: ${{ steps.shouldLabelAliases.outputs.match != '' }}
       with:
         labels: |
           quality-aliases
@@ -28,7 +28,7 @@ jobs:
         regex: '^### Quality Areas\\s*^.*Formatting Code Samples.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.shouldLabelFormattingCodeSamples.match != '' }}
+      if: ${{ steps.shouldLabelFormattingCodeSamples.outputs.match != '' }}
       with:
         labels: |
           quality-formatting-code-samples
@@ -39,7 +39,7 @@ jobs:
         regex: '^### Quality Areas\\s*^.*Formatting Command Syntax.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.shouldLabelFormattingCommandSyntax.match != '' }}
+      if: ${{ steps.shouldLabelFormattingCommandSyntax.outputs.match != '' }}
       with:
         labels: |
           quality-formatting-command-syntax
@@ -50,7 +50,7 @@ jobs:
         regex: '^### Quality Areas\\s*^.*Link References.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.shouldLabelLinkReferences.match != '' }}
+      if: ${{ steps.shouldLabelLinkReferences.outputs.match != '' }}
       with:
         labels: |
           quality-link-references
@@ -61,7 +61,7 @@ jobs:
         regex: '^### Quality Areas\\s*^.*Markdown Linting.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.shouldLabelMarkdownLinting.match != '' }}
+      if: ${{ steps.shouldLabelMarkdownLinting.outputs.match != '' }}
       with:
         labels: |
           quality-markdown-linting
@@ -72,7 +72,7 @@ jobs:
         regex: '^### Quality Areas\\s*^.*Spelling.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.shouldLabelSpelling.match != '' }}
+      if: ${{ steps.shouldLabelSpelling.outputs.match != '' }}
       with:
         labels: |
           quality-spelling
