@@ -3,15 +3,76 @@ on:
   issues:
     types:
       - opened
-      - reopened
 
 jobs:
   labeling:
     name: Issue Labeling
     runs-on: ubuntu-latest
+    if: github.event.action == 'opened' && github.event_name == 'issue'
     steps:
-    - uses: github/issue-labeler@v2.5
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: shouldLabelAliases
       with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        configuration-path: .github/labeling/hackoberfest.yml
-        enable-versioned-regex: 0
+        text: ${{ github.event.issue.body }}
+        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Aliases.*$'
+        flags: gm
+    - uses: actions-ecosystem/action-add-labels@v1
+      if: ${{ steps.shouldLabelAliases.match != '' }}
+      with:
+        labels: |
+          quality-aliases
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: shouldLabelFormattingCodeSamples
+      with:
+        text: ${{ github.event.issue.body }}
+        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Formatting Code Samples.*$'
+        flags: gm
+    - uses: actions-ecosystem/action-add-labels@v1
+      if: ${{ steps.shouldLabelFormattingCodeSamples.match != '' }}
+      with:
+        labels: |
+          quality-formatting-code-samples
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: shouldLabelFormattingCommandSyntax
+      with:
+        text: ${{ github.event.issue.body }}
+        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Formatting Command Syntax.*$'
+        flags: gm
+    - uses: actions-ecosystem/action-add-labels@v1
+      if: ${{ steps.shouldLabelFormattingCommandSyntax.match != '' }}
+      with:
+        labels: |
+          quality-formatting-command-syntax
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: shouldLabelLinkReferences
+      with:
+        text: ${{ github.event.issue.body }}
+        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Link References.*$'
+        flags: gm
+    - uses: actions-ecosystem/action-add-labels@v1
+      if: ${{ steps.shouldLabelLinkReferences.match != '' }}
+      with:
+        labels: |
+          quality-link-references
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: shouldLabelMarkdownLinting
+      with:
+        text: ${{ github.event.issue.body }}
+        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Markdown Linting.*$'
+        flags: gm
+    - uses: actions-ecosystem/action-add-labels@v1
+      if: ${{ steps.shouldLabelMarkdownLinting.match != '' }}
+      with:
+        labels: |
+          quality-markdown-linting
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: shouldLabelSpelling
+      with:
+        text: ${{ github.event.issue.body }}
+        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Spelling.*$'
+        flags: gm
+    - uses: actions-ecosystem/action-add-labels@v1
+      if: ${{ steps.shouldLabelSpelling.match != '' }}
+      with:
+        labels: |
+          quality-spelling
