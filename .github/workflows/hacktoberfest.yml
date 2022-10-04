@@ -10,16 +10,16 @@ jobs:
     name: Issue Assignment
     runs-on: ubuntu-latest
     steps:
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: quality-aliases
-        with:
-          text: ${{ github.event.issue.body }}
-          regex: '🎃 2022: Foo'
-          flags: gm
-      - uses: actions-ecosystem/action-add-assignees@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          assignees: ${{ github.event.issue.user }}
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: quality-aliases
+      with:
+        text: ${{ github.event.issue.body }}
+        regex: '🎃 2022: Foo'
+        flags: gm
+    - uses: actions-ecosystem/action-add-assignees@v1
+      with:
+        github_token: ${{ secrets.github_token }}
+        assignees: ${{ github.event.issue.user }}
   labeling:
     name: Issue Labeling
     runs-on: ubuntu-latest
