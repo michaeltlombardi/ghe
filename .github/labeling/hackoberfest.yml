@@ -1,0 +1,12 @@
+quality-aliases:
+  - (?<=Quality Areas\r?\n\r?\n)^.*Aliases.*$
+quality-formatting-code-samples:
+  - (?<=Quality Areas\r?\n\r?\n)^.*Formatting Code Samples.*$
+quality-formatting-command-syntax:
+  - (?<=Quality Areas\r?\n\r?\n)^.*Formatting Command Syntax.*$
+quality-link-references:
+  - (?<=Quality Areas\r?\n\r?\n)^.*Link References.*$
+quality-markdown-linting:
+  - (?<=Quality Areas\r?\n\r?\n)^.*Markdown Linting.*$
+quality-spelling:
+  - (?<=Quality Areas\r?\n\r?\n)^.*Spelling.*$

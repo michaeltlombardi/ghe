@@ -1,0 +1,16 @@
+name: "Hacktoberfest"
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  labeling:
+    name: Issue Labeling
+    runs-on: ubuntu-latest
+    if: github.event.action == 'opened' && github.event_name == 'issue'
+    steps:
+    - uses: github/issue-labeler@v2.5
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: .github/labeler.yml
