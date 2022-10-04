@@ -6,6 +6,20 @@ on:
       - reopened
 
 jobs:
+  assigning:
+    name: Issue Assignment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: quality-aliases
+        with:
+          text: ${{ github.event.issue.body }}
+          regex: '🎃 2022: Foo'
+          flags: gm
+      - uses: actions-ecosystem/action-add-assignees@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          assignees: ${{ github.event.issue.user }}
   labeling:
     name: Issue Labeling
     runs-on: ubuntu-latest
@@ -22,27 +36,27 @@ jobs:
         labels: |
           quality-aliases
     - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-formatting-code-samples
+      id: quality-format-code-samples
       with:
         text: ${{ github.event.issue.body }}
         regex: '^### Quality Areas\s*^.*Formatting code samples.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-formatting-code-samples.outputs.match != '' }}
+      if: ${{ steps.quality-format-code-samples.outputs.match != '' }}
       with:
         labels: |
-          quality-formatting-code-samples
+          quality-format-code-samples
     - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-formatting-command-syntax
+      id: quality-format-command-syntax
       with:
         text: ${{ github.event.issue.body }}
         regex: '^### Quality Areas\s*^.*Formatting command syntax.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-formatting-command-syntax.outputs.match != '' }}
+      if: ${{ steps.quality-format-command-syntax.outputs.match != '' }}
       with:
         labels: |
-          quality-formatting-command-syntax
+          quality-format-command-syntax
     - uses: actions-ecosystem/action-regex-match@v2
       id: quality-link-references
       with:
@@ -55,16 +69,16 @@ jobs:
         labels: |
           quality-link-references
     - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-markdown-linting
+      id: quality-markdownlint
       with:
         text: ${{ github.event.issue.body }}
         regex: '^### Quality Areas\s*^.*Markdown linting.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-markdown-linting.outputs.match != '' }}
+      if: ${{ steps.quality-markdownlint.outputs.match != '' }}
       with:
         labels: |
-          quality-markdown-linting
+          quality-markdownlint
     - uses: actions-ecosystem/action-regex-match@v2
       id: quality-spelling
       with:
