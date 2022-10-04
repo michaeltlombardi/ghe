@@ -11,15 +11,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-aliases
+      id: is-hacktober
       with:
         text: ${{ github.event.issue.body }}
         regex: '🎃 2022: Foo'
         flags: gm
     - uses: actions-ecosystem/action-add-assignees@v1
+      if: ${{ steps.is-hacktober.outputs.match != '' }}
       with:
         github_token: ${{ secrets.github_token }}
         assignees: ${{ github.event.issue.user.login }}
+  projecting:
+    name: Project Management
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions-ecosystem/action-regex-match@v2
+      id: is-hacktober
+      with:
+        text: ${{ github.event.issue.body }}
+        regex: '🎃 2022: Foo'
+        flags: gm
+    - uses: actions/add-to-project@v0.3.0
+      if: ${{ steps.is-hacktober.outputs.match != '' }}
+      with:
+        project-url: https://github.com/users/michaeltlombardi/projects/1
+        github-token: ${{ secrets.github_token }}
   labeling:
     name: Issue Labeling
     runs-on: ubuntu-latest
