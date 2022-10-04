@@ -9,7 +9,6 @@ jobs:
   labeling:
     name: Issue Labeling
     runs-on: ubuntu-latest
-    if: github.event.action == 'opened' && github.event_name == 'issue'
     steps:
     - uses: actions-ecosystem/action-regex-match@v2
       id: shouldLabelAliases
