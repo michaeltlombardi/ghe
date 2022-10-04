@@ -14,7 +14,7 @@ jobs:
       id: shouldLabelAliases
       with:
         text: ${{ github.event.issue.body }}
-        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Aliases.*$'
+        regex: '^### Quality Areas\\s*^.*Aliases.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
       if: ${{ steps.shouldLabelAliases.match != '' }}
@@ -25,7 +25,7 @@ jobs:
       id: shouldLabelFormattingCodeSamples
       with:
         text: ${{ github.event.issue.body }}
-        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Formatting Code Samples.*$'
+        regex: '^### Quality Areas\\s*^.*Formatting Code Samples.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
       if: ${{ steps.shouldLabelFormattingCodeSamples.match != '' }}
@@ -36,7 +36,7 @@ jobs:
       id: shouldLabelFormattingCommandSyntax
       with:
         text: ${{ github.event.issue.body }}
-        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Formatting Command Syntax.*$'
+        regex: '^### Quality Areas\\s*^.*Formatting Command Syntax.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
       if: ${{ steps.shouldLabelFormattingCommandSyntax.match != '' }}
@@ -47,7 +47,7 @@ jobs:
       id: shouldLabelLinkReferences
       with:
         text: ${{ github.event.issue.body }}
-        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Link References.*$'
+        regex: '^### Quality Areas\\s*^.*Link References.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
       if: ${{ steps.shouldLabelLinkReferences.match != '' }}
@@ -58,7 +58,7 @@ jobs:
       id: shouldLabelMarkdownLinting
       with:
         text: ${{ github.event.issue.body }}
-        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Markdown Linting.*$'
+        regex: '^### Quality Areas\\s*^.*Markdown Linting.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
       if: ${{ steps.shouldLabelMarkdownLinting.match != '' }}
@@ -69,7 +69,7 @@ jobs:
       id: shouldLabelSpelling
       with:
         text: ${{ github.event.issue.body }}
-        regex: '(?<=Quality Areas\r?\n\r?\n)^.*Spelling.*$'
+        regex: '^### Quality Areas\\s*^.*Spelling.*$'
         flags: gm
     - uses: actions-ecosystem/action-add-labels@v1
       if: ${{ steps.shouldLabelSpelling.match != '' }}
