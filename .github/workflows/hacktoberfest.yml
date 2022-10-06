@@ -43,7 +43,7 @@ jobs:
   AssociateIssue:
     name: Associate Issue
     if: ${{ github.event_name == 'issues' }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
         id: body-associated
@@ -69,18 +69,7 @@ jobs:
           Write-Output "Prefixing issue body with association to hacktoberfest"
 
           $Combined = $IssuePrefix, $env:BODY | Join-String -Separator "`n`n"
-          
-          $Parameters = @(
-            'issue', 'edit', $env:ISSUE
-            '--body', $Combined
-          )
-          
-          Write-Output "Parameters:"
-          foreach ($p in $Parameters) {
-            Write-Output "`t$($p -split "`n" | join-string -separator "`n`t")"
-          }
-          
-          gh @Parameters
+          gh issue edit $env:ISSUE --body $Combined
 
   LabelIssue:
     name: Label Issue
