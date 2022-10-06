@@ -56,8 +56,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE: ${{ github.event.issue.html_url }}
           BODY: ${{ github.event.issue.body }}
+          PREFIX: |
+            This issue's related to [Hacktoberfest 2022][01]. For more info, see the meta-issue below:
+
+            - michaeltlombardi/ghe#26
+
+            [01]: https://hacktoberfest.com/participation/
         run: |
-          $env:GH_DEBUG = 'api'
           $IssuePrefix = @'
           This issue's related to [Hacktoberfest 2022][01]. For more info, see the meta-issue below:
 
@@ -65,11 +70,16 @@ jobs:
 
           [01]: https://hacktoberfest.com/participation/
           '@
+          
+          Write-Host -ForegroundColor Magenta  -Object $env:PREFIX
 
           Write-Output "Prefixing issue body with association to hacktoberfest"
 
-          $Combined = $IssuePrefix, $env:BODY | Join-String -Separator "`n`n"
-          gh issue edit $env:ISSUE --body $Combined
+          $IssuePrefix, $env:BODY
+          | Join-String -Separator "`n`n"
+          | Out-File -FilePath combined.txt -Encoding utf8
+
+          gh issue edit $env:ISSUE --body-file combined.txt
 
   LabelIssue:
     name: Label Issue
