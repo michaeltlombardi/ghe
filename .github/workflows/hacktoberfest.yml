@@ -70,7 +70,7 @@ jobs:
           $Combined = $IssuePrefix, $env:BODY | Join-String -Separator "`n`n"
           
           $Parameters = @(
-            'issue', 'edit', [int]$env:ISSUE
+            'issue', 'edit', $env:ISSUE
             '--body', $Combined
           )
           
