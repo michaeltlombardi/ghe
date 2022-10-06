@@ -76,7 +76,7 @@ jobs:
           
           Write-Output "Parameters:"
           foreach ($p in $Parameters) {
-            Write-Output "`t$(($p -split "`n").join("`n`t"))"
+            Write-Output "`t$($p -split "`n" | join-string -separator "`n`t")"
           }
           
           gh @Parameters
