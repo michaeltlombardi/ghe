@@ -54,7 +54,7 @@ jobs:
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE: ${{ github.event.issue.number }}
+          ISSUE: ${{ github.event.issue.html_url }}
           BODY: ${{ github.event.issue.body }}
         run: |
           $IssuePrefix = @'
