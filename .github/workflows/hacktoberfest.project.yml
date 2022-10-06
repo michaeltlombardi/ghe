@@ -15,7 +15,7 @@ jobs:
   AddIssue:
     name: Add issue to project
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'issue' }}
+    if: ${{ github.event_name == 'issues' }}
     steps:
     - uses: actions-ecosystem/action-regex-match@v2
       id: is-hacktober
