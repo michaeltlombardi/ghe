@@ -57,6 +57,7 @@ jobs:
           ISSUE: ${{ github.event.issue.html_url }}
           BODY: ${{ github.event.issue.body }}
         run: |
+          $env:GH_DEBUG = 'api'
           $IssuePrefix = @'
           This issue's related to [Hacktoberfest 2022][01]. For more info, see the meta-issue below:
 
