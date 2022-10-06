@@ -19,7 +19,9 @@ jobs:
       - shell: pwsh
         run: |
           '${{ github.event_name }}'
-          '${{ toJSON(github.event) }}'
+          @'
+          ${{ toJSON(github.event) }}
+          '@
           
   AssignIssue:
     name: Assign Issue
