@@ -4,105 +4,206 @@ on:
     types:
       - opened
       - reopened
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - edited
 
 jobs:
-  assigning:
-    name: Issue Assignment
+  AssignIssue:
+    name: Assign Issue
+    if: ${{ github.event_name == 'issue' }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: is-hacktober
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '🎃 2022: Foo'
-        flags: gm
-    - uses: actions-ecosystem/action-add-assignees@v1
-      if: ${{ steps.is-hacktober.outputs.match != '' }}
-      with:
-        github_token: ${{ secrets.github_token }}
-        assignees: ${{ github.event.issue.user.login }}
-  projecting:
-    name: Project Management
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: is-hacktober
+        with:
+          text: ${{ github.event.issue.body }}
+          regex: "🎃 2022: Foo"
+          flags: gm
+      - uses: actions-ecosystem/action-add-assignees@v1
+        if: ${{ steps.is-hacktober.outputs.match != '' }}
+        with:
+          github_token: ${{ secrets.github_token }}
+          assignees: ${{ github.event.issue.user.login }}
+
+  AssociateIssue:
+    name: Associate Issue
+    if: ${{ github.event_name == 'issue' }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: is-hacktober
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '🎃 2022: Foo'
-        flags: gm
-    - uses: actions/add-to-project@v0.3.0
-      if: ${{ steps.is-hacktober.outputs.match != '' }}
-      with:
-        project-url: https://github.com/users/michaeltlombardi/projects/1
-        github-token: ${{ secrets.github_token }}
-  labeling:
-    name: Issue Labeling
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: body-associated
+        with:
+          text: ${{ github.event.issue.body }}
+          regex: '^- michaeltlombardi\/ghe#26$'
+      - if: ${{ steps.body-associated.outputs.match != '' }}
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ github.event.issue.number }}
+          BODY: ${{ github.event.issue.body }}
+        run: |
+          $IssuePrefix = @'
+          This issue's related to [Hacktoberfest 2022][01]. For more info, see the meta-issue below:
+
+          - michaeltlombardi/ghe#26
+
+          [01]: https://hacktoberfest.com/participation/
+          '@
+
+          Write-Output "Prefixing issue body with association to hacktoberfest"
+
+          $Combined = $IssuePrefix, $env:BODY | Join-String -Separator "`n`n"
+
+          gh issue edit $env:ISSUE --body $Combined
+
+  LabelIssue:
+    name: Label Issue
+    if: ${{ github.event_name == 'issue' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - regex: Aliases
+            label: quality-aliases
+          - regex: Formatting code samples
+            label: quality-format-code-samples
+          - regex: Formatting command syntax
+            label: quality-format-command-syntax
+          - regex: Link references
+            label: quality-link-references
+          - regex: Markdown linting
+            label: quality-markdownlint
+          - regex: Spelling
+            label: quality-spelling
+    steps:
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: matcher
+        with:
+          text: ${{ github.event.issue.body }}
+          regex: '^### Quality Areas\s*^.*${{ matrix.regex }}.*$'
+          flags: gm
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ steps.matcher.outputs.match != '' }}
+        with:
+          labels: ${{ matrix.label }}
+    # - uses: actions-ecosystem/action-regex-match@v2
+    #   id: quality-format-code-samples
+    #   with:
+    #     text: ${{ github.event.issue.body }}
+    #     regex: '^### Quality Areas\s*^.*Formatting code samples.*$'
+    #     flags: gm
+    # - uses: actions-ecosystem/action-add-labels@v1
+    #   if: ${{ steps.quality-format-code-samples.outputs.match != '' }}
+    #   with:
+    #     labels: |
+    #       quality-format-code-samples
+    # - uses: actions-ecosystem/action-regex-match@v2
+    #   id: quality-format-command-syntax
+    #   with:
+    #     text: ${{ github.event.issue.body }}
+    #     regex: '^### Quality Areas\s*^.*Formatting command syntax.*$'
+    #     flags: gm
+    # - uses: actions-ecosystem/action-add-labels@v1
+    #   if: ${{ steps.quality-format-command-syntax.outputs.match != '' }}
+    #   with:
+    #     labels: |
+    #       quality-format-command-syntax
+    # - uses: actions-ecosystem/action-regex-match@v2
+    #   id: quality-link-references
+    #   with:
+    #     text: ${{ github.event.issue.body }}
+    #     regex: '^### Quality Areas\s*^.*Link references.*$'
+    #     flags: gm
+    # - uses: actions-ecosystem/action-add-labels@v1
+    #   if: ${{ steps.quality-link-references.outputs.match != '' }}
+    #   with:
+    #     labels: |
+    #       quality-link-references
+    # - uses: actions-ecosystem/action-regex-match@v2
+    #   id: quality-markdownlint
+    #   with:
+    #     text: ${{ github.event.issue.body }}
+    #     regex: '^### Quality Areas\s*^.*Markdown linting.*$'
+    #     flags: gm
+    # - uses: actions-ecosystem/action-add-labels@v1
+    #   if: ${{ steps.quality-markdownlint.outputs.match != '' }}
+    #   with:
+    #     labels: |
+    #       quality-markdownlint
+    # - uses: actions-ecosystem/action-regex-match@v2
+    #   id: quality-spelling
+    #   with:
+    #     text: ${{ github.event.issue.body }}
+    #     regex: '^### Quality Areas\s*^.*Spelling.*$'
+    #     flags: gm
+    # - uses: actions-ecosystem/action-add-labels@v1
+    #   if: ${{ steps.quality-spelling.outputs.match != '' }}
+    #   with:
+    #     labels: |
+    #       quality-spelling
+
+  LabelPullRequestByTitle:
+    name: Label PR by title
+    if: ${{ github.event_name == 'pull_request_target'}}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-aliases
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '^### Quality Areas\s*^.*Aliases.*$'
-        flags: gm
-    - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-aliases.outputs.match != '' }}
-      with:
-        labels: |
-          quality-aliases
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-format-code-samples
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '^### Quality Areas\s*^.*Formatting code samples.*$'
-        flags: gm
-    - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-format-code-samples.outputs.match != '' }}
-      with:
-        labels: |
-          quality-format-code-samples
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-format-command-syntax
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '^### Quality Areas\s*^.*Formatting command syntax.*$'
-        flags: gm
-    - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-format-command-syntax.outputs.match != '' }}
-      with:
-        labels: |
-          quality-format-command-syntax
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-link-references
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '^### Quality Areas\s*^.*Link references.*$'
-        flags: gm
-    - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-link-references.outputs.match != '' }}
-      with:
-        labels: |
-          quality-link-references
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-markdownlint
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '^### Quality Areas\s*^.*Markdown linting.*$'
-        flags: gm
-    - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-markdownlint.outputs.match != '' }}
-      with:
-        labels: |
-          quality-markdownlint
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: quality-spelling
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '^### Quality Areas\s*^.*Spelling.*$'
-        flags: gm
-    - uses: actions-ecosystem/action-add-labels@v1
-      if: ${{ steps.quality-spelling.outputs.match != '' }}
-      with:
-        labels: |
-          quality-spelling
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ contains(github.event.pull_request.title, '🎃') }}
+        with:
+          labels: hacktoberfest-candidate
+
+  # LabelPullRequestByAssociation:
+  #   name: Label PR by request
+  #   if: ${{ github.event_name == 'pull_request_target' }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - if: ${{ !contains(github.event.pull_request.title, '🎃') }}
+  #       shell: pwsh
+  #       env:
+  #         REPO: ${{ github.}}
+  #         PR_NUMBER: ${{ github.event.pull_request.number }}
+  #       run: |
+  #         $PullRequstQuery = @'
+  #         query($owner: String! $repo: String! $pr: Int!) { 
+  #           repository(owner: $owner, name: $repo) {
+  #             pullRequest(number: $pr) {
+  #               id
+  #               author { login }
+  #               title
+  #               closingIssuesReferences(first: 10) {
+  #                 edges {
+  #                   node {
+  #                     id
+  #                     author { login }
+  #                     title
+  #                   }
+  #                 }
+  #               }
+  #             }
+  #           }
+  #         }
+  #         '@
+  #         $PullRequestQueryParams = @(
+  #           'api', 'graphql', $env:PR_NUMBER
+  #           '-f', "query=$QueryString"
+  #           '-f', ""
+  #           '--jq', '{ Author: .author.login, ID: .id }'
+  #         )
+  #         $PR = gh @PullRequestQuery | ConvertFrom-Json
+
+  #         $IssuesQuery = @(
+  #           'issue', 'list',
+  #           '--assignee', $PR.Author
+  #           '--json', 'id'
+  #           '--json', 'number'
+  #           '--jq', '.[] | { ID: .id, Number: .number }'
+  #         )
+  #         $Issues = gh @IssuesQuery | ConvertFrom-Json
+
+          
