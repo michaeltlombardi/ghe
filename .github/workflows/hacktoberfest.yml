@@ -50,7 +50,7 @@ jobs:
         with:
           text: ${{ github.event.issue.body }}
           regex: '^- michaeltlombardi\/ghe#26$'
-      - if: ${{ steps.body-associated.outputs.match != '' }}
+      - if: ${{ steps.body-associated.outputs.match == '' }}
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
