@@ -19,11 +19,11 @@ jobs:
       - shell: pwsh
         run: |
           '${{ github.event_name }}'
-          '${{ github.event }}'
+          '${{ toJSON(github.event) }}'
           
   AssignIssue:
     name: Assign Issue
-    if: ${{ github.event_name == 'issue' }}
+    if: ${{ github.event_name == 'issues' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
@@ -40,7 +40,7 @@ jobs:
 
   AssociateIssue:
     name: Associate Issue
-    if: ${{ github.event_name == 'issue' }}
+    if: ${{ github.event_name == 'issues' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
@@ -71,7 +71,7 @@ jobs:
 
   LabelIssue:
     name: Label Issue
-    if: ${{ github.event_name == 'issue' }}
+    if: ${{ github.event_name == 'issues' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
