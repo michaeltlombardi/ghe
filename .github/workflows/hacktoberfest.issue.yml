@@ -6,8 +6,8 @@ on:
       - reopened
 
 jobs:
-  # Assign an issue to the author if the body text matches text inserted from the issue template.
-  IsHacktoberFestIssue:
+  # Check if the issue is for hacktoberfest; all other jobs depend on this one.
+  hacktober:
     name: Verify issue is for hacktoberfest
     runs-on: ubuntu-latest
     outputs:
@@ -20,10 +20,21 @@ jobs:
           regex: "🎃 2022: Foo"
           flags: gm
 
-  AssignIssue:
-    name: Assign Issue
-    needs: IsHacktoberFestIssue
-    if: needs.IsHacktoberFestIssue.outputs.check
+  project:
+    name: Add to project
+    needs: hacktober
+    if: needs.hacktober.outputs.check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@v0.3.0
+        with:
+          project-url: https://github.com/users/michaeltlombardi/projects/1
+          github-token: ${{ secrets.hacktober_token }}
+
+  assign:
+    name: Assign to author
+    needs: hacktober
+    if: needs.hacktober.outputs.check
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-add-assignees@v1
@@ -31,11 +42,10 @@ jobs:
           github_token: ${{ secrets.github_token }}
           assignees: ${{ github.event.issue.user.login }}
 
-  # Associate the issue with the meta issue and assign it to the author if the body text matches text inserted from the issue
-  AssociateIssue:
-    name: Associate Issue
-    needs: IsHacktoberFestIssue
-    if: needs.IsHacktoberFestIssue.outputs.check
+  associate:
+    name: Associate with meta issue
+    needs: hacktober
+    if: needs.hacktober.outputs.check
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
@@ -62,10 +72,10 @@ jobs:
 
           gh issue edit $env:ISSUE --body-file combined.txt
 
-  LabelIssue:
-    name: Label Issue
-    needs: IsHacktoberFestIssue
-    if: needs.IsHacktoberFestIssue.outputs.check
+  label:
+    name: Add quality labels
+    needs: hacktober
+    if: needs.hacktober.outputs.check
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
