@@ -16,26 +16,28 @@ jobs:
   AddIssue:
     name: Add issue to project
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'issues' }}
+    if: github.event_name == 'issues'
     steps:
-    - uses: actions-ecosystem/action-regex-match@v2
-      id: is-hacktober
-      with:
-        text: ${{ github.event.issue.body }}
-        regex: '🎃 2022: Foo'
-        flags: gm
-    - uses: actions/add-to-project@v0.3.0
-      if: ${{ steps.is-hacktober.outputs.match != '' }}
-      with:
-        project-url: https://github.com/users/michaeltlombardi/projects/1
-        github-token: ${{ secrets.hacktober_token }}
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: is-hacktober
+        with:
+          text: ${{ github.event.issue.body }}
+          regex: "🎃 2022: Foo"
+          flags: gm
+      - uses: actions/add-to-project@v0.3.0
+        if: steps.is-hacktober.outputs.match != ''
+        with:
+          project-url: https://github.com/users/michaeltlombardi/projects/1
+          github-token: ${{ secrets.hacktober_token }}
 
   AddPR:
     name: Add pull request to project
     runs-on: ubuntu-latest
-    if: ${{ github.event.label.name == 'hacktoberfest-candidate' }}
+    if: |
+      github.event.label.name == 'hacktoberfest-candidate' ||
+      contains(github.event.pull_request.labels.*.name, 'hacktoberfest-candidate')
     steps:
-    - uses: actions/add-to-project@v0.3.0
-      with:
-        project-url: https://github.com/users/michaeltlombardi/projects/1
-        github-token: ${{ secrets.hacktober_token }}
+      - uses: actions/add-to-project@v0.3.0
+        with:
+          project-url: https://github.com/users/michaeltlombardi/projects/1
+          github-token: ${{ secrets.hacktober_token }}

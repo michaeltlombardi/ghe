@@ -8,7 +8,7 @@ on:
 jobs:
   AssignIssue:
     name: Assign Issue
-    if: ${{ github.event_name == 'issues' }}
+    if: github.event_name == 'issues'
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
@@ -18,14 +18,14 @@ jobs:
           regex: "🎃 2022: Foo"
           flags: gm
       - uses: actions-ecosystem/action-add-assignees@v1
-        if: ${{ steps.is-hacktober.outputs.match != '' }}
+        if: steps.is-hacktober.outputs.match != ''
         with:
           github_token: ${{ secrets.github_token }}
           assignees: ${{ github.event.issue.user.login }}
 
   AssociateIssue:
     name: Associate Issue
-    if: ${{ github.event_name == 'issues' }}
+    if: github.event_name == 'issues'
     runs-on: windows-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
@@ -33,7 +33,7 @@ jobs:
         with:
           text: ${{ github.event.issue.body }}
           regex: '^- michaeltlombardi\/ghe#26$'
-      - if: ${{ steps.body-associated.outputs.match == '' }}
+      - if: steps.body-associated.outputs.match == ''
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,19 +46,7 @@ jobs:
 
             [01]: https://hacktoberfest.com/participation/
         run: |
-          $IssuePrefix = @'
-          This issue's related to [Hacktoberfest 2022][01]. For more info, see the meta-issue below:
-
-          - michaeltlombardi/ghe#26
-
-          [01]: https://hacktoberfest.com/participation/
-          '@
-          
-          Write-Host -ForegroundColor Magenta  -Object $env:PREFIX
-
-          Write-Output "Prefixing issue body with association to hacktoberfest"
-
-          $IssuePrefix, $env:BODY
+          $env:PREFIX, $env:BODY
           | Join-String -Separator "`n`n"
           | Out-File -FilePath combined.txt -Encoding utf8
 
@@ -66,7 +54,7 @@ jobs:
 
   LabelIssue:
     name: Label Issue
-    if: ${{ github.event_name == 'issues' }}
+    if: github.event_name == 'issues'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -92,6 +80,6 @@ jobs:
           regex: '^### Quality Areas\s*^.*${{ matrix.regex }}.*$'
           flags: gm
       - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ steps.matcher.outputs.match != '' }}
+        if: steps.matcher.outputs.match != ''
         with:
           labels: ${{ matrix.label }}
