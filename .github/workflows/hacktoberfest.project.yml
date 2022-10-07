@@ -5,6 +5,7 @@ on:
     types:
       - opened
       - reopened
+      - labeled
   pull_request_target:
     branches:
       - main
