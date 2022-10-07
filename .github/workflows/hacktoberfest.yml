@@ -9,6 +9,7 @@ on:
       - edited
 
 jobs:
+  # If the PR has a jack-o-lantern in the name, label it as hacktoberfest.
   LabelPullRequestByTitle:
     name: Label PR by title
     if: contains(github.event.pull_request.title, '🎃')
@@ -18,6 +19,7 @@ jobs:
         with:
           labels: hacktoberfest-candidate
 
+  # If the PR gets labeled as hacktoberfest, add it to the project
   AddPullRequestToProject:
     name: Add pull request to project
     runs-on: ubuntu-latest
@@ -29,51 +31,3 @@ jobs:
         with:
           project-url: https://github.com/users/michaeltlombardi/projects/1
           github-token: ${{ secrets.hacktober_token }}
-
-  # LabelPullRequestByAssociation:
-  #   name: Label PR by request
-  #   if: ${{ github.event_name == 'pull_request_target' }}
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - if: ${{ !contains(github.event.pull_request.title, '🎃') }}
-  #       shell: pwsh
-  #       env:
-  #         REPO: ${{ github.}}
-  #         PR_NUMBER: ${{ github.event.pull_request.number }}
-  #       run: |
-  #         $PullRequstQuery = @'
-  #         query($owner: String! $repo: String! $pr: Int!) {
-  #           repository(owner: $owner, name: $repo) {
-  #             pullRequest(number: $pr) {
-  #               id
-  #               author { login }
-  #               title
-  #               closingIssuesReferences(first: 10) {
-  #                 edges {
-  #                   node {
-  #                     id
-  #                     author { login }
-  #                     title
-  #                   }
-  #                 }
-  #               }
-  #             }
-  #           }
-  #         }
-  #         '@
-  #         $PullRequestQueryParams = @(
-  #           'api', 'graphql', $env:PR_NUMBER
-  #           '-f', "query=$QueryString"
-  #           '-f', ""
-  #           '--jq', '{ Author: .author.login, ID: .id }'
-  #         )
-  #         $PR = gh @PullRequestQuery | ConvertFrom-Json
-
-  #         $IssuesQuery = @(
-  #           'issue', 'list',
-  #           '--assignee', $PR.Author
-  #           '--json', 'id'
-  #           '--json', 'number'
-  #           '--jq', '.[] | { ID: .id, Number: .number }'
-  #         )
-  #         $Issues = gh @IssuesQuery | ConvertFrom-Json

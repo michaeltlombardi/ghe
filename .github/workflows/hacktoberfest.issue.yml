@@ -6,26 +6,36 @@ on:
       - reopened
 
 jobs:
-  AssignIssue:
-    name: Assign Issue
-    if: github.event_name == 'issues'
+  # Assign an issue to the author if the body text matches text inserted from the issue template.
+  IsHacktoberFestIssue:
+    name: Verify issue is for hacktoberfest
     runs-on: ubuntu-latest
+    outputs:
+      check: ${{ steps.is-hacktober.outputs.match != '' }}
     steps:
-      - uses: actions-ecosystem/action-regex-match@v2
+      - uses: actions-ecosystem/action-regex-match
         id: is-hacktober
         with:
           text: ${{ github.event.issue.body }}
           regex: "🎃 2022: Foo"
           flags: gm
+
+  AssignIssue:
+    name: Assign Issue
+    needs: is-hacktober
+    if: needs.is-hacktober.outputs.check
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions-ecosystem/action-add-assignees@v1
-        if: steps.is-hacktober.outputs.match != ''
         with:
           github_token: ${{ secrets.github_token }}
           assignees: ${{ github.event.issue.user.login }}
 
+  # Associate the issue with the meta issue and assign it to the author if the body text matches text inserted from the issue
   AssociateIssue:
     name: Associate Issue
-    if: github.event_name == 'issues'
+    needs: is-hacktober
+    if: needs.is-hacktober.outputs.check
     runs-on: windows-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
@@ -54,7 +64,8 @@ jobs:
 
   LabelIssue:
     name: Label Issue
-    if: github.event_name == 'issues'
+    needs: is-hacktober
+    if: needs.is-hacktober.outputs.check
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

@@ -5,7 +5,6 @@ on:
     types:
       - opened
       - reopened
-      - labeled
   pull_request_target:
     branches:
       - main
@@ -13,6 +12,8 @@ on:
       - labeled
 
 jobs:
+  # Add an issue to the project based on whether it has text in the body added
+  # by the template.
   AddIssue:
     name: Add issue to project
     runs-on: ubuntu-latest
@@ -31,6 +32,7 @@ jobs:
           github-token: ${{ secrets.hacktober_token }}
 
   AddPR:
+    # Add any PRs with the hacktoberfest-candidate label
     name: Add pull request to project
     runs-on: ubuntu-latest
     if: |
