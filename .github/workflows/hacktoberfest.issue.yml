@@ -57,7 +57,7 @@ jobs:
             [01]: https://hacktoberfest.com/participation/
         run: |
           $env:PREFIX, $env:BODY
-          | Join-String -Separator "`n`n"
+          | Join-String -Separator "`n"
           | Out-File -FilePath combined.txt -Encoding utf8
 
           gh issue edit $env:ISSUE --body-file combined.txt
