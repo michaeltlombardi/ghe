@@ -13,7 +13,7 @@ jobs:
     outputs:
       check: ${{ steps.is-hacktober.outputs.match != '' }}
     steps:
-      - uses: actions-ecosystem/action-regex-match
+      - uses: actions-ecosystem/action-regex-match@v2
         id: is-hacktober
         with:
           text: ${{ github.event.issue.body }}
