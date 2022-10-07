@@ -36,7 +36,7 @@ jobs:
     name: Associate Issue
     needs: IsHacktoberFestIssue
     if: needs.IsHacktoberFestIssue.outputs.check
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-regex-match@v2
         id: body-associated
