@@ -16,8 +16,8 @@ jobs:
   check:
     name: Check if PR is for Hacktoberfest
     outputs:
-      title:   ${{ steps.title.outputs.check   == 'true' }}
-      labeled: ${{ steps.labeled.outputs.check == 'true' }}
+      title:   ${{ steps.title.outputs.check == true }}
+      labeled: ${{ steps.labeled.outputs.check == true }}
     runs-on: ubuntu-latest
     steps:
       - id: title
@@ -34,13 +34,13 @@ jobs:
         run: |
           $Check = [bool]::Parse($env:NEW_LABEL) -or [bool]::Parse($env:HAS_LABEL)
           "Check: $Check"
-          "::set-output name=check::$Check"
+          "::set-output name=check::$($Check.ToString().ToLower())"
 
   label:
     name: Add hacktoberfest candidate label
     needs: check
     if: |
-      needs.check.outputs.title
+      needs.check.outputs.title == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-add-labels@v1
@@ -51,8 +51,8 @@ jobs:
     name: Add pull request to project
     needs: check
     if: |
-      needs.check.outputs.title ||
-      needs.check.outputs.labeled
+      needs.check.outputs.title == true ||
+      needs.check.outputs.labeled == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/add-to-project@v0.3.0
