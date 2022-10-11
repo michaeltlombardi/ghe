@@ -7,6 +7,7 @@ on:
       - opened
       - reopened
       - edited
+      - synchronize
 
 defaults:
   run:
@@ -16,8 +17,8 @@ jobs:
   check:
     name: Check if PR is for Hacktoberfest
     outputs:
-      title:   ${{ steps.title.outputs.check == true }}
-      labeled: ${{ steps.labeled.outputs.check == true }}
+      title:   ${{ steps.title.outputs.check == 'true' }}
+      labeled: ${{ steps.labeled.outputs.check == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - id: title
@@ -40,7 +41,7 @@ jobs:
     name: Add hacktoberfest candidate label
     needs: check
     if: |
-      needs.check.outputs.title == true
+      needs.check.outputs.title == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions-ecosystem/action-add-labels@v1
@@ -51,8 +52,8 @@ jobs:
     name: Add pull request to project
     needs: check
     if: |
-      needs.check.outputs.title == true ||
-      needs.check.outputs.labeled == true
+      needs.check.outputs.title == 'true' ||
+      needs.check.outputs.labeled == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/add-to-project@v0.3.0
