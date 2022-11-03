@@ -5,12 +5,9 @@ title: "🎃 2022: "
 body:
   - type: markdown
     attributes:
-      value: |
-        This issue's related to [Hacktoberfest 2022][01]. For more info, see the meta-issue below:
-        
-        - michaeltlombardi/ghe#26
-
-        [01]: https://hacktoberfest.com/participation/
+      value: >-
+        This issue's related to [Hacktoberfest 2022][01].\n\nFor more info, see the meta-issue below
+        <!-- -->\n\n[01]: https://hacktoberfest.com/participation/
   - type: checkboxes
     id: prerequisites
     attributes:
