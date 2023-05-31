@@ -1,0 +1,37 @@
+name: 🗣️ Documentation Feedback
+description: >-
+  Provide feedback about a specific article from the Learn Platform. This template is only meant
+  to be used from the live page for an article on https://learn.microsoft.com. If you're filing an
+  issue on GitHub, please use one of the other templates.
+labels:
+  - needs-triage
+body:
+  - type: input
+    id: page_url
+    validations:
+      required: true
+    attributes:
+      label: Page URL
+  - type: input
+    id: view
+    validations:
+      required: true
+    attributes:
+      label: Version Moniker
+  - type: textarea
+    id: feedback
+    validations:
+      required: true
+    attributes:
+      label: Feedback
+      description: >-
+        Write a clear and concise description of your feedback for the documentation.
+  - type: textarea
+    id: details
+    validations:
+      required: false
+    attributes:
+      label: Details
+      description: >-
+        If possible, please provide extended details that will add context and help the team
+        address your feedback.
