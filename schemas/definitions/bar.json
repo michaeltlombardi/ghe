@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/michaeltlombardi/ghe/main/schemas/definitions/bar.json",
+    "title": "Bar Options",
+    "description": "Settings for the Bar service",
+    "type": "object",
+    "properties": {
+        "first": {
+            "title": "First Setting",
+            "type": "string",
+            "pattern": "^\\w+$"
+        },
+        "second": {
+            "title": "Second Setting",
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMaximum": 100
+        }
+    }
+}

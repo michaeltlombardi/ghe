@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/michaeltlombardi/ghe/main/schemas/example.json",
+    "title": "Example Schema",
+    "description": "Test for schemas hosted in a github repository.",
+    "type": "object",
+    "properties": {
+        "foo": {
+            "title": "Foo Options",
+            "description": "Each item in the array is a collection of settings",
+            "items": {
+                "$ref": "/michaeltlombardi/ghe/main/schemas/definitions/foo.json"
+            }
+        },
+        "bar": {
+            "$ref": "/michaeltlombardi/ghe/main/schemas/definitions/bar.json"
+        }
+    }
+}
