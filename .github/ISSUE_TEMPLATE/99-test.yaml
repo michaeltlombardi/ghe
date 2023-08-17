@@ -1,5 +1,8 @@
 name:        Verbatim Feedback
 description: Sample description
+labels:
+  - bug
+  - needs-triage
 body:
   - type: textarea
     id:   summary
