@@ -1,0 +1,82 @@
+name:        Verbatim Feedback
+description: Sample description
+body:
+  - type: textarea
+    id:   summary
+    attributes:
+      label:       Feedback Summary
+      description: Provide a concise summary of your feedback.
+      placeholder: When reading the docs, I noticed...
+    validations:
+      required: true
+  - type: textarea
+    id:   details
+    attributes:
+      label:       Feedback Details
+      description: >-
+        Please provide additional details to help the team understand how to address your feedback.
+    validations:
+      required: false
+  - type: textarea
+    id:   environment
+    attributes:
+      label:       Environment Information
+      render:      PowerShell
+      description: |
+        Run the following command and paste the verbatim output into this box.
+
+        ```powershell
+        $PSVersionTable
+        ```
+      placeholder: |
+        Name                           Value
+        ----                           -----
+        PSVersion                      7.3.6
+        PSEdition                      Core
+        GitCommitId                    7.3.6
+        OS                             Microsoft Windows 10.0.22621
+        Platform                       Win32NT
+        PSCompatibleVersions           {1.0, 2.0, 3.0, 4.0…}
+        PSRemotingProtocolVersion      2.3
+        SerializationVersion           1.1.0.1
+        WSManStackVersion              3.0
+  - type: input
+    id:   page_url
+    attributes:
+      label:       Documentation Page URL
+      description: |
+        The URL to the documentation page on the Learn platform.
+
+        This value is automatically defined by the Learn platform. Don't edit this field.
+    validations:
+      required: true
+  - type: input
+    id:   github_url
+    attributes:
+      label:       Documentation Source URL
+      description: |
+        The URL to the documentation file in GitHub.
+
+        This value is automatically defined by the Learn platform. Don't edit this field.
+    validations:
+      required: true
+  - type: input
+    id:   view
+    attributes:
+      label:       Documentation View
+      description: |
+        The view for the documentation page on the Learn platform.
+
+        This value is automatically defined by the Learn platform. Don't edit this field.
+    validations:
+      required: true
+  - type: input
+    id:   document_id
+    attributes:
+      label:       Documentation ID
+      description: |
+        The unique ID for the documentation page.
+
+        This value is automatically defined by the Learn platform. Don't edit this field.
+    validations:
+      required: true
